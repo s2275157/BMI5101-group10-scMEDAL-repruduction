@@ -1,0 +1,11 @@
+# Core packages for Harmony/Scanorama runs and CPU analysis.
+# Use Python 3.11. Preserve this environment separately from scmedal-aml.
+numpy==1.26.4
+pandas==2.2.3
+scipy==1.13.1
+scikit-learn==1.5.2
+anndata==0.11.0
+scanpy==1.9.8
+harmonypy
+scanorama
+

@@ -1,0 +1,8 @@
+# Core packages for scVI/scANVI GPU runs.
+# Use Python 3.11 and install the CUDA 11.8 PyTorch wheel appropriate to the node.
+numpy==1.26.4
+anndata==0.11.0
+scanpy==1.9.8
+torch==2.2.0
+scvi-tools==1.3.0
+

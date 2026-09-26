@@ -1,0 +1,45 @@
+{
+  "experiment": "AML",
+  "scenario": "log_transformed_2916hvggenes",
+  "generated_on": "2026-09-26",
+  "notes": "Set SCMEDAL_FORMAL_ROOT to the private formal-output root before running the scripts. Canonical run names are explicit to prevent duplicate runs from being mixed.",
+  "methods": {
+    "scMEDAL-FE": {
+      "model_folder": "scmedalfe",
+      "run_path": "${SCMEDAL_FORMAL_ROOT}/AML/latent_space/log_transformed_2916hvggenes/scmedalfe/run_crossval_loss_gen_weight-1_loss_recon_weight-1000_loss_class_weight-1_n_latent_dims-50_layer_units-512-132_scaling-min_max_model_type-scmedalfe_batch_size-512_epochs-500_patience-30_sample_size-10000_2026-09-22_14-43",
+      "expected_splits": 5,
+      "expected_latent_files": 15
+    },
+    "scMEDAL-RE": {
+      "model_folder": "scmedalre",
+      "run_path": "${SCMEDAL_FORMAL_ROOT}/AML/latent_space/log_transformed_2916hvggenes/scmedalre/run_crossval_loss_recon_weight-110_loss_latent_cluster_weight-0.1_n_latent_dims-50_layer_units-512-132_scaling-min_max_batch_size-512_epochs-500_patience-30_sample_size-10000_2026-09-22_19-16",
+      "expected_splits": 5,
+      "expected_latent_files": 15,
+      "expected_counterfactual_files": 285
+    },
+    "Harmony": {
+      "model_folder": "harmony_50dims",
+      "run_path": "${SCMEDAL_FORMAL_ROOT}/AML/latent_space/log_transformed_2916hvggenes/harmony_50dims/run_crossval_n_latent_dims-50_scaling-min_max_sample_size-10000_model_type-ae_2026-09-24_13-32",
+      "expected_splits": 5,
+      "expected_latent_files": 15
+    },
+    "Scanorama": {
+      "model_folder": "scanorama_50dims",
+      "run_path": "${SCMEDAL_FORMAL_ROOT}/AML/latent_space/log_transformed_2916hvggenes/scanorama_50dims/run_crossval_n_latent_dims-50_scaling-min_max_sample_size-10000_model_type-ae_2026-09-24_13-32",
+      "expected_splits": 5,
+      "expected_latent_files": 15
+    },
+    "scVI": {
+      "model_folder": "scVI_50dims",
+      "run_path": "${SCMEDAL_FORMAL_ROOT}/AML/latent_space/log_transformed_2916hvggenes/scVI_50dims/run_crossval_n_latent_dims-50_n_layers-2_n_hidden-132_gene_likelihood-zinb_dispersion-gene_scaling-min_max_batch_size-512_epochs-500_patience-30_compute_latents_callback-False_sample_size-10000_model_type-ae_2026-09-24_17-25",
+      "expected_splits": 5,
+      "expected_latent_files": 15
+    },
+    "scANVI": {
+      "model_folder": "scANVI_50dims",
+      "run_path": "${SCMEDAL_FORMAL_ROOT}/AML/latent_space/log_transformed_2916hvggenes/scANVI_50dims/run_crossval_n_latent_dims-50_n_layers-2_n_hidden-132_gene_likelihood-zinb_dispersion-gene_scaling-min_max_batch_size-512_epochs-500_patience-30_compute_latents_callback-False_sample_size-10000_model_type-ae_2026-09-24_17-47",
+      "expected_splits": 5,
+      "expected_latent_files": 15
+    }
+  }
+}

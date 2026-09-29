@@ -1,0 +1,31 @@
+#!/bin/bash
+#PBS -N aml_6m_umap
+#PBS -l select=1:ncpus=16:mem=64gb
+#PBS -l walltime=02:00:00
+#PBS -j oe
+
+set -euo pipefail
+
+: "${AUTHOR_REPO_ROOT:?Pass AUTHOR_REPO_ROOT with qsub -v}"
+: "${SCMEDAL_FORMAL_ROOT:?Pass SCMEDAL_FORMAL_ROOT with qsub -v}"
+: "${UMAP_OUTPUT_ROOT:?Pass UMAP_OUTPUT_ROOT with qsub -v}"
+
+echo "Started: $(date)"
+echo "Host: $(hostname)"
+
+module load miniforge3/25.3.1
+conda activate scmedal-aml
+
+cd "$PBS_O_WORKDIR"
+MPLBACKEND=Agg CUDA_VISIBLE_DEVICES="" \
+python reproducibility/plot_six_method_umap.py \
+  --manifest reproducibility/run_manifest.json \
+  --author-repo "$AUTHOR_REPO_ROOT" \
+  --output-root "$UMAP_OUTPUT_ROOT" \
+  --analysis-name AML_six_methods_train_split1 \
+  --dataset-type train \
+  --split 1 \
+  --seed 5 \
+  --neighbors 15
+
+echo "Finished: $(date)"

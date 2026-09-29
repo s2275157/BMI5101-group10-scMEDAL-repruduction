@@ -122,6 +122,20 @@ filesystem path, so the small metric outputs can be reviewed before publication.
 The scripts intentionally use exact canonical paths instead of selecting the newest
 directory with an unconstrained wildcard.
 
+6. Generate directly comparable UMAPs for Input PCA and all six canonical
+   representations on the same AML cells (fold 1 training partition):
+
+```bash
+qsub -P <your_project> -q normal \
+  -v AUTHOR_REPO_ROOT=/path/to/scMEDAL_for_scRNAseq,SCMEDAL_FORMAL_ROOT=/path/to/scMEDAL_formal,UMAP_OUTPUT_ROOT=/path/to/scMEDAL_visualizations \
+  reproducibility/aml_six_method_umap.pbs
+```
+
+The job uses the same 19 batches, seed 5, 15 neighbours, and min-max scaling
+for every representation. It writes batch-, cell-type-, and patient-group-coloured
+PNG files plus the UMAP-coordinate CSVs. These UMAPs are qualitative; the formal
+five-fold test summaries remain the quantitative comparison.
+
 ## How to interpret the comparison
 
 The evaluation has two different objectives:
@@ -148,7 +162,9 @@ Do not rank FE and RE as if they solve the same task.
 ├── reproducibility/
 │   ├── run_manifest.json
 │   ├── verify_outputs.py
-│   └── collect_metrics.py
+│   ├── collect_metrics.py
+│   ├── plot_six_method_umap.py
+│   └── aml_six_method_umap.pbs
 └── results/
     └── README.md
 ```

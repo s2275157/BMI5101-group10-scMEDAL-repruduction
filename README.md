@@ -117,7 +117,10 @@ Expected small outputs:
 - `results/metrics/test_metrics_long.csv`
 - `results/metrics/test_metrics_mean.csv`
 
-The scripts intentionally use exact canonical paths instead of selecting the newest directory with an unconstrained wildcard.
+The generated tables retain only the source CSV filename, not the expanded private
+filesystem path, so the small metric outputs can be reviewed before publication.
+The scripts intentionally use exact canonical paths instead of selecting the newest
+directory with an unconstrained wildcard.
 
 ## How to interpret the comparison
 

@@ -37,7 +37,9 @@ def read_summary(method: str, summary_path: Path) -> pd.DataFrame:
 
     frame = frame[frame["label"].isin(["batch", "celltype"])].copy()
     frame.insert(0, "method", method)
-    frame.insert(1, "source_file", str(summary_path))
+    # Keep generated tables safe to publish: record the summary filename, not
+    # the expanded institutional filesystem path from SCMEDAL_FORMAL_ROOT.
+    frame.insert(1, "source_file", summary_path.name)
     return frame[["method", "source_file", "label", "metric", "mean", "std", "sem"]]
 
 

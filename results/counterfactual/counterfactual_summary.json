@@ -1,0 +1,37 @@
+{
+  "experiment": "AML",
+  "scenario": "log_transformed_2916hvggenes",
+  "method": "scMEDAL-RE",
+  "run_name": "run_crossval_loss_recon_weight-110_loss_latent_cluster_weight-0.1_n_latent_dims-50_layer_units-512-132_scaling-min_max_batch_size-512_epochs-500_patience-30_sample_size-10000_2026-09-22_19-16",
+  "fold_count": 5,
+  "dataset_splits": [
+    "train",
+    "val",
+    "test"
+  ],
+  "target_batch_count": 19,
+  "target_batches": [
+    "AML1012",
+    "AML210A",
+    "AML328",
+    "AML329",
+    "AML419A",
+    "AML420B",
+    "AML475",
+    "AML556",
+    "AML707B",
+    "AML870",
+    "AML916",
+    "AML921A",
+    "BM1",
+    "BM2",
+    "BM3",
+    "BM4",
+    "BM5",
+    "MUTZ3",
+    "OCI"
+  ],
+  "counterfactual_file_count": 285,
+  "expected_gene_count": 2916,
+  "audit_status": "passed"
+}

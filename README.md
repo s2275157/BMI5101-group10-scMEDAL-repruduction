@@ -122,7 +122,26 @@ filesystem path, so the small metric outputs can be reviewed before publication.
 The scripts intentionally use exact canonical paths instead of selecting the newest
 directory with an unconstrained wildcard.
 
-6. Generate directly comparable UMAPs for Input PCA and all six canonical
+6. Plot the primary five-fold ASW comparison with 95% confidence intervals:
+
+```bash
+python reproducibility/plot_fivefold_asw.py \
+  --metrics results/metrics/test_metrics_long.csv \
+  --output-dir results/figures \
+  --folds 5
+```
+
+Expected small outputs:
+
+- `results/figures/aml_asw_fivefold_95ci.png`
+- `results/figures/aml_asw_fivefold_95ci.pdf`
+- `results/figures/aml_asw_fivefold_95ci.csv`
+
+The error bars are 95% Student-t confidence intervals calculated from the
+five-fold SEM. scMEDAL-RE is displayed with the comparison but is interpreted
+as a batch-modeling representation, not ranked as a batch-correction method.
+
+7. Generate directly comparable UMAPs for Input PCA and all six canonical
    representations on the same AML cells (fold 1 training partition):
 
 ```bash
@@ -163,6 +182,7 @@ Do not rank FE and RE as if they solve the same task.
 │   ├── run_manifest.json
 │   ├── verify_outputs.py
 │   ├── collect_metrics.py
+│   ├── plot_fivefold_asw.py
 │   ├── plot_six_method_umap.py
 │   └── aml_six_method_umap.pbs
 └── results/
@@ -171,7 +191,6 @@ Do not rank FE and RE as if they solve the same task.
 
 ## Remaining work
 
-- Generate one unified five-fold comparison table from the canonical runs.
-- Recompute UMAPs using the same cells, folds, seed, neighbors, and plotting conventions.
+- Commit the unified five-fold comparison table and ASW figure.
 - Produce AML counterfactual/MEC visualizations and interpret donor/patient-group effects.
 - Prepare the final research report and presentation.

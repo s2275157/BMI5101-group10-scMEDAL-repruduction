@@ -129,7 +129,7 @@ def plot_panel(
         )
         horizontal_offset = 0.018 if label == "batch" else 0.008
         ax.text(
-            row["mean"] + horizontal_offset,
+            row["ci95_high"] + horizontal_offset,
             position,
             f"{row['mean']:+.3f}",
             va="center",

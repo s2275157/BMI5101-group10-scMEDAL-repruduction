@@ -31,3 +31,7 @@ The ASW plot reports five-fold test means and 95% Student-t confidence
 intervals. Lower batch ASW denotes stronger suppression for batch-invariant
 methods; high batch ASW is expected for scMEDAL-RE because it explicitly models
 donor/batch-specific variation.
+
+Before producing counterfactual expression figures, run
+`reproducibility/audit_counterfactual_outputs.py`. Commit only its small CSV/JSON
+inventory and summaries; do not commit the 285 reconstructed `.npy` arrays.

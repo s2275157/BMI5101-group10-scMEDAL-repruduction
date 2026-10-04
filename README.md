@@ -157,6 +157,22 @@ for every representation. It writes batch-, cell-type-, and patient-group-colour
 PNG files plus the UMAP-coordinate CSVs. These UMAPs are qualitative; the formal
 five-fold test summaries remain the quantitative comparison.
 
+8. Audit the scMEDAL-RE counterfactual arrays before biological interpretation:
+
+```bash
+python reproducibility/audit_counterfactual_outputs.py \
+  --manifest reproducibility/run_manifest.json \
+  --data-root /path/to/scMEDAL_for_scRNAseq/data/AML_data/log_transformed_2916hvggenes \
+  --output-dir results/counterfactual \
+  --expected-targets 19 \
+  --expected-genes 2916
+```
+
+This reads only NumPy headers (`mmap_mode="r"`) and writes a public-safe file
+inventory, a fold/split summary, and a JSON audit record. It verifies that each
+counterfactual array has one row per source cell and one column per HVG; it does
+not redistribute reconstructed expression arrays.
+
 ## How to interpret the comparison
 
 The evaluation has two different objectives:
@@ -185,6 +201,7 @@ Do not rank FE and RE as if they solve the same task.
 │   ├── verify_outputs.py
 │   ├── collect_metrics.py
 │   ├── plot_fivefold_asw.py
+│   ├── audit_counterfactual_outputs.py
 │   ├── plot_six_method_umap.py
 │   └── aml_six_method_umap.pbs
 └── results/

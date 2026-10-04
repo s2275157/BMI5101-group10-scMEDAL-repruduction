@@ -42,7 +42,7 @@ RE 可以固定一个细胞的 latent state，只替换 decoder 使用的 batch 
 
 > 如果模型把这个细胞放到另一个 donor/batch 条件下，它会重建出怎样的表达？
 
-这可以比较同一细胞在不同 batch 条件下的模型预测变化，并通过 genomap 展示。但是它是模型生成的 as-if simulation：没有随机干预、不能证明因果关系，也不能声称细胞真实发生了这种变化。
+这可以比较同一细胞在不同 batch 条件下的模型预测变化。结果是模型生成的 as-if reconstruction，表示给定替换后的 donor/batch 标签时，模型预测的表达模式。
 
 ## 4. 我们在 AML 上做了什么
 
@@ -52,6 +52,8 @@ RE 可以固定一个细胞的 latent state，只替换 decoder 使用的 batch 
 - 训练 scMEDAL-FE、scMEDAL-RE、Harmony、Scanorama、scVI、scANVI。
 - Input PCA 作为未经整合的参考。
 - 正式神经网络训练最多 500 epochs，并使用 validation-based early stopping，patience 30。
+- 使用五折测试集中的 Mono 和 Mono-like 细胞做 RE counterfactual 分析；每折把同一组源细胞放入 19 种目标 donor/batch 条件。
+- 完成五折基因差异方向、代表性 donor 图和逐一排除 control donor 的敏感性检查。
 
 ## 5. 怎么比较才公平
 
@@ -79,14 +81,15 @@ RE 可以固定一个细胞的 latent state，只替换 decoder 使用的 batch 
 - FE latent 的解释目标是 batch mixing 与 biological preservation。
 - RE latent 的解释目标是 donor/batch modeling。
 - 完整 counterfactual 输出链路已经跑通。
+- SAMSN1 的模型重构差异在五折中方向一致，并且五折都进入差异幅度前 30；结果用于展示目标 donor/batch 相关模式。
 
 暂时不能说：
 
 - “scMEDAL 在所有数据集上最好”：我们目前只正式复现了 AML。
 - “RE 的 batch separation 高，所以 correction 更差”：RE 本来就不是 correction latent。
-- “Counterfactual 证明 donor 导致了某个基因变化”：它不是因果实验。
+- “每个基因都达到统计显著”：fold 1 的 2,916 个基因检验中，FDR < 0.05 的数量为 0。
 - “只看一张 UMAP 就证明模型优越”：最终需要五折指标、置信区间和下游任务共同支持。
 
 ## 8. 一分钟口头版本
 
-我们研究的是单细胞数据里的 batch effect。很多方法只想把 batch 去掉，但 donor 和疾病状态可能纠缠在一起，直接去除可能损失有用信息。scMEDAL 因此训练两个互补子网络：FE 用 adversarial autoencoder 学习尽量不包含 batch 的主要细胞状态；RE 用 Bayesian autoencoder 学习 donor/batch-specific variation。两者独立训练，后续可以组合用于预测。RE 还可以固定一个细胞的 latent state、替换 batch label，生成它“如果来自另一个 donor”时的表达重建，但这只是模型的 as-if simulation，不是因果证明。我们用作者处理好的 AML 数据完成了五折 scMEDAL-FE、scMEDAL-RE、Harmony、Scanorama、scVI 和 scANVI，下一步是在相同评价流程下做统一指标、UMAP 和 counterfactual 可视化。
+我们研究的是单细胞数据里的 batch effect。donor 和疾病状态可能纠缠在一起，因此需要同时观察共享的细胞状态与 donor/batch 特异变化。scMEDAL 训练两个互补子网络：FE 用 adversarial autoencoder 学习尽量独立于 batch 的主要细胞状态；RE 用 Bayesian autoencoder 学习 donor/batch-specific variation。两者独立训练，后续可以组合用于预测。RE 固定一个细胞的 latent state、替换 batch label，生成模型在另一目标条件下的 as-if 表达重建。我们用作者处理好的 AML 数据完成了 FE、RE 和四种比较方法的正式五折运行，并用五折指标、UMAP、counterfactual 基因效应图及 donor 图解释模型输出。SAMSN1 在五折目标条件比较中方向一致，是一个适合展示的模型预测模式。

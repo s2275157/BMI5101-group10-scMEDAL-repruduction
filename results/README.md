@@ -35,3 +35,11 @@ donor/batch-specific variation.
 Before producing counterfactual expression figures, run
 `reproducibility/audit_counterfactual_outputs.py`. Commit only its small CSV/JSON
 inventory and summaries; do not commit the 285 reconstructed `.npy` arrays.
+
+The curated AML counterfactual results are in
+[`counterfactual/fivefold_mono_monolike/`](counterfactual/fivefold_mono_monolike/).
+They contain a five-fold gene-effect table, a selected-gene donor table, a
+leave-one-control-donor-out table, two figures, and a JSON summary. The fold-1
+directory contains one diagnostic 19-target heatmap and its top-gene table.
+Each figure summarizes model-generated as-if reconstructions from fixed
+Mono/Mono-like source-cell states.

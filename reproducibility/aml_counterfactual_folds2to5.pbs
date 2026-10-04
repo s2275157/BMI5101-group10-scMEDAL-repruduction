@@ -1,0 +1,39 @@
+#!/bin/bash
+#PBS -N aml_cf_folds2to5
+#PBS -J 2-5
+#PBS -l select=1:ncpus=8:mem=32gb
+#PBS -l walltime=02:00:00
+#PBS -j oe
+
+set -euo pipefail
+
+: "${AUTHOR_REPO_ROOT:?Pass AUTHOR_REPO_ROOT with qsub -v}"
+: "${SCMEDAL_FORMAL_ROOT:?Pass SCMEDAL_FORMAL_ROOT with qsub -v}"
+
+FOLD="${PBS_ARRAY_INDEX:-${PBS_ARRAYID:-}}"
+: "${FOLD:?PBS array index is unavailable}"
+
+cd "$PBS_O_WORKDIR"
+
+echo "Started: $(date)"
+echo "Host: $(hostname)"
+echo "FOLD=$FOLD"
+
+module load miniforge3/25.3.1
+source "$(conda info --base)/etc/profile.d/conda.sh"
+conda activate scmedal-aml
+
+export MPLBACKEND=Agg
+export CUDA_VISIBLE_DEVICES=""
+python --version
+
+python reproducibility/analyze_aml_counterfactual.py \
+  --manifest reproducibility/run_manifest.json \
+  --data-root "$AUTHOR_REPO_ROOT/data/AML_data/log_transformed_2916hvggenes" \
+  --output-dir "results/counterfactual/fold${FOLD}_test_mono_monolike" \
+  --fold "$FOLD" \
+  --dataset test \
+  --source-celltypes Mono Mono-like \
+  --top-genes 30
+
+echo "Finished: $(date)"

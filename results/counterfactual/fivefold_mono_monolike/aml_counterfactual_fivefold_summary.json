@@ -1,0 +1,33 @@
+{
+  "folds": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "source_cell_counts": {
+    "1": 999,
+    "2": 998,
+    "3": 997,
+    "4": 999,
+    "5": 996
+  },
+  "target_donors_per_fold": 19,
+  "target_group_counts": {
+    "AML": 12,
+    "control": 5,
+    "cellline": 2
+  },
+  "gene_count": 2916,
+  "all_fold_same_direction_gene_count": 216,
+  "selected_donor_plot_genes": [
+    "SAMSN1",
+    "TXNIP",
+    "FTL",
+    "CENPE",
+    "SRGN"
+  ],
+  "interpretation": "model-generated as-if expression reconstruction",
+  "summary_scope": "Descriptive effect-direction stability across held-out source-cell folds; target donors recur across folds."
+}

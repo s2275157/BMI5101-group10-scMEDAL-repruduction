@@ -30,8 +30,10 @@ All six trained representations use the authors' five supplied folds. The AML in
 | scANVI | Complete | 5 splits, 15 latent arrays, 6 score CSVs, 0 empty files |
 
 Training is complete. The six-method five-fold test summaries, primary ASW
-figure, and consistently configured fold-1 UMAPs have been generated. The next
-stage is counterfactual/MEC visualization and donor/patient-group interpretation.
+figure, and consistently configured fold-1 UMAPs have been generated. The
+scMEDAL-RE counterfactual arrays were audited, and five-fold AML donor/batch
+visualizations and a donor-sensitivity table were generated for Mono and
+Mono-like source cells.
 
 ## What scMEDAL does
 
@@ -48,7 +50,8 @@ The RE decoder can hold the learned cell representation fixed while replacing `z
 
 > What expression profile would this model generate for the same encoded cell if it were assigned to another donor/batch?
 
-This is a model-based **as-if simulation**, not evidence of a causal intervention.
+This is a model-generated **as-if reconstruction** conditioned on a substituted
+donor/batch label.
 
 ## Data and upstream code
 
@@ -173,6 +176,64 @@ inventory, a fold/split summary, and a JSON audit record. It verifies that each
 counterfactual array has one row per source cell and one column per HVG; it does
 not redistribute reconstructed expression arrays.
 
+9. Analyze the held-out test cells with `Mono` and `Mono-like` labels. The same
+   source cells within each fold are reconstructed under all 19 target
+   donor/batch conditions. On ASPIRE 2A, the supplied PBS scripts run fold 1
+   and the fold 2–5 array job:
+
+```bash
+qsub -P <your_project> -q normal \
+  -v AUTHOR_REPO_ROOT=/path/to/scMEDAL_for_scRNAseq,SCMEDAL_FORMAL_ROOT=/path/to/scMEDAL_formal \
+  reproducibility/aml_counterfactual_analysis.pbs
+
+qsub -P <your_project> -q normal \
+  -v AUTHOR_REPO_ROOT=/path/to/scMEDAL_for_scRNAseq,SCMEDAL_FORMAL_ROOT=/path/to/scMEDAL_formal \
+  reproducibility/aml_counterfactual_folds2to5.pbs
+```
+
+Each job calls [`analyze_aml_counterfactual.py`](reproducibility/analyze_aml_counterfactual.py).
+It writes a gene-level AML minus control target-donor comparison and a
+19-target heatmap. The statistics use target donors as units: 12 AML and 5
+controls. The two cell lines appear descriptively in the heatmap.
+
+10. After all five fold directories exist, summarize effect direction and
+    selected donor responses:
+
+```bash
+python reproducibility/summarize_aml_counterfactual_fivefold.py \
+  --input-root results/counterfactual \
+  --output-dir results/counterfactual/fivefold_mono_monolike
+```
+
+The summary checks gene-index and donor mappings across folds. It reports
+per-fold effect sizes, the number of folds with the same direction, how often
+each gene enters the fold's top 30 by absolute difference, and the effect of
+omitting each control donor for five selected genes. The same target donors
+recur across folds, so these are descriptive stability summaries.
+
+### AML counterfactual results
+
+The five-fold effect heatmap is
+[`aml_counterfactual_fivefold_gene_effects.png`](results/counterfactual/fivefold_mono_monolike/aml_counterfactual_fivefold_gene_effects.png).
+The selected-gene donor plot is
+[`aml_counterfactual_fivefold_donor_means.png`](results/counterfactual/fivefold_mono_monolike/aml_counterfactual_fivefold_donor_means.png);
+its dots show the five-fold mean and error bars show fold standard deviation.
+The source cells number 996–999 per held-out fold.
+
+`SAMSN1` has a negative AML minus control target-donor difference in all five
+folds (mean −0.07132) and enters the top 30 in all five. `TXNIP` and `FTL` also
+have negative differences in all five folds. Their directions persist when
+each control donor is omitted in turn; their magnitudes vary by donor,
+including BM5. `CENPE` and `SRGN` show less consistent per-fold responses in
+the donor sensitivity table. The complete small result tables are in
+[`results/counterfactual/fivefold_mono_monolike/`](results/counterfactual/fivefold_mono_monolike/).
+
+The gene-level comparisons are exploratory: fold 1 has no gene with
+Benjamini–Hochberg FDR below 0.05 among the 2,916 tested genes. AML/control
+labels are associated with target donor/batch identity in this dataset. The
+figures characterize model-generated target-condition patterns for this one
+AML dataset.
+
 ## How to interpret the comparison
 
 The evaluation has two different objectives:
@@ -202,6 +263,10 @@ Do not rank FE and RE as if they solve the same task.
 │   ├── collect_metrics.py
 │   ├── plot_fivefold_asw.py
 │   ├── audit_counterfactual_outputs.py
+│   ├── analyze_aml_counterfactual.py
+│   ├── aml_counterfactual_analysis.pbs
+│   ├── aml_counterfactual_folds2to5.pbs
+│   ├── summarize_aml_counterfactual_fivefold.py
 │   ├── plot_six_method_umap.py
 │   └── aml_six_method_umap.pbs
 └── results/
@@ -210,5 +275,5 @@ Do not rank FE and RE as if they solve the same task.
 
 ## Remaining work
 
-- Produce AML counterfactual/MEC visualizations and interpret donor/patient-group effects.
 - Prepare the final research report and presentation.
+- Consider a second public dataset and an encoder extension if project time allows.

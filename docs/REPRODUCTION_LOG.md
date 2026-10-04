@@ -42,6 +42,29 @@ A run is accepted only when the job was submitted, the saved log finished withou
 - Formal scVI and scANVI jobs both finished on 24 September 2026.
 - Each canonical run passed five-split, 15-latent, six-score-CSV, and zero-empty-file checks.
 
+### AML counterfactual analysis (5 October 2026)
+
+- The 285 RE reconstruction arrays passed a five-fold, three-split, 19-target,
+  2,916-gene header and shape audit.
+- The first fold-1 analysis attempt stopped at `str.removeprefix`, which is
+  unavailable in the validated Python 3.8.20 environment. Replacing it with
+  prefix slicing allowed the analysis to finish.
+- The selected held-out source cells are `Mono` and `Mono-like`: 999, 998,
+  997, 999, and 996 cells in folds 1–5. Each fold reconstructs the same source
+  cells under 19 target donor/batch labels.
+- Gene-level comparisons use the 12 AML target donors and 5 control target
+  donors as units. MUTZ3 and OCI are visualized as cell-line targets.
+- Five-fold effects, selected donor responses, and a leave-one-control-donor-out
+  sensitivity table were generated. `SAMSN1` enters the top 30 by absolute
+  difference in all five folds, with an AML minus control target mean of
+  −0.07132. Its direction persists across all five folds when each control
+  donor is omitted in turn.
+- BM5 affects the magnitude of several selected genes. `CENPE` and `SRGN`
+  show more fold-dependent donor responses than `SAMSN1`, `TXNIP`, and `FTL`.
+- Fold 1 has 0 genes at Benjamini–Hochberg FDR < 0.05 among 2,916 tests. The
+  counterfactual figures and five-fold gene rankings are exploratory model
+  summaries for this AML dataset.
+
 ## Canonical runs
 
 Exact canonical run names are stored in [`../reproducibility/run_manifest.json`](../reproducibility/run_manifest.json). The private NSCC root and scheduler identifiers are retained in the private project record rather than this public repository. Downstream scripts must use this manifest and must not choose a run using an unconstrained glob.
@@ -54,10 +77,12 @@ Completed:
 - FE/RE diagnostic metrics and UMAPs.
 - RE counterfactual reconstruction generation.
 - Canonical run identification and output validation.
+- Unified five-fold test metrics and a primary ASW figure.
+- Consistently configured fold-1 UMAP comparison including input PCA.
+- AML counterfactual donor/batch visualizations and five-fold descriptive
+  stability analysis for Mono and Mono-like source cells.
 
 Remaining:
 
-- Unified five-fold test metric table across all methods.
-- Consistent UMAP comparison including input PCA.
-- AML counterfactual/MEC visualization and donor/patient-group interpretation.
 - Final report and presentation.
+- A second dataset and architecture extension, if included in the final scope.

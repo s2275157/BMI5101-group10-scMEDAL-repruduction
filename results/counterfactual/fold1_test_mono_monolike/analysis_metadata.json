@@ -1,0 +1,25 @@
+{
+  "experiment": "AML",
+  "scenario": "log_transformed_2916hvggenes",
+  "method": "scMEDAL-RE",
+  "run_name": "run_crossval_loss_recon_weight-110_loss_latent_cluster_weight-0.1_n_latent_dims-50_layer_units-512-132_scaling-min_max_batch_size-512_epochs-500_patience-30_sample_size-10000_2026-09-22_19-16",
+  "fold": 1,
+  "dataset": "test",
+  "source_celltypes": [
+    "Mono",
+    "Mono-like"
+  ],
+  "source_cell_count": 999,
+  "target_batch_count": 19,
+  "target_group_counts": {
+    "AML": 12,
+    "control": 5,
+    "cellline": 2
+  },
+  "gene_count": 2916,
+  "gene_table": "geneids.csv",
+  "gene_column": "Gene",
+  "top_gene_ranking": "absolute AML-control difference across target-batch means",
+  "statistical_unit": "target donor/batch mean",
+  "interpretation": "model-generated as-if expression reconstruction"
+}

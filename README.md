@@ -18,7 +18,7 @@ We use one public dataset, AML, to reproduce and compare:
 
 All six trained representations use the authors' five supplied folds. The AML input contains 2,916 highly variable genes, 19 donor/batches, and 21 configured cell-type categories.
 
-## Current status (26 September 2026)
+## Current status (5 October 2026)
 
 | Method | Formal five-fold run | Validation |
 |---|---:|---|
@@ -29,7 +29,9 @@ All six trained representations use the authors' five supplied folds. The AML in
 | scVI | Complete | 5 splits, 15 latent arrays, 6 score CSVs, 0 empty files |
 | scANVI | Complete | 5 splits, 15 latent arrays, 6 score CSVs, 0 empty files |
 
-Training is complete. The next stage is a unified five-fold test comparison and consistent UMAP/counterfactual visualization.
+Training is complete. The six-method five-fold test summaries, primary ASW
+figure, and consistently configured fold-1 UMAPs have been generated. The next
+stage is counterfactual/MEC visualization and donor/patient-group interpretation.
 
 ## What scMEDAL does
 
@@ -191,6 +193,5 @@ Do not rank FE and RE as if they solve the same task.
 
 ## Remaining work
 
-- Commit the unified five-fold comparison table and ASW figure.
 - Produce AML counterfactual/MEC visualizations and interpret donor/patient-group effects.
 - Prepare the final research report and presentation.

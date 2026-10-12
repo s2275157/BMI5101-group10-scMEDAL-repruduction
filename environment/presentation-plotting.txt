@@ -1,0 +1,5 @@
+# Isolated figure-rendering environment, verified with Python 3.12.
+# This is separate from model training; these pins are plotting-only.
+matplotlib==3.11.2
+numpy==2.5.4
+pandas==3.0.6

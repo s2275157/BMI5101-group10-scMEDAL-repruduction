@@ -4,6 +4,17 @@ Reproduction and evaluation of **scMEDAL (single-cell Mixed Effects Deep Autoenc
 
 This repository contains our reproducibility layer: environment notes, canonical run records, output validation, metric aggregation, and interpretation guidance. It does **not** redistribute the authors' dataset, trained weights, or large latent/reconstruction arrays.
 
+## Presentation (12 October 2026)
+
+The course submission is an editable PowerPoint presentation. Version 5 integrates the completed AML results, paired cell-type/patient-group UMAPs, donor-conditioned reconstruction summaries, and a discussion of evaluation boundaries.
+
+- [Download the editable presentation](presentations/scMEDAL_AML_reproduction_results_v5.pptx).
+- [Slide map and editing guide](presentations/README.md).
+- [Results interpretation and figure provenance](docs/PRESENTATION_RESULTS.md).
+- [Small presentation figure/table outputs](results/presentation/).
+
+The deck has 23 main slides and two appendix slides. The final literature-extension appendix is hidden in slide-show mode. No group-contribution page is included. Model extensions and loss-weight tuning remain prospective.
+
 ## Project scope
 
 We use one public dataset, AML, to reproduce and compare:
@@ -252,7 +263,11 @@ Do not rank FE and RE as if they solve the same task.
 ├── README.md
 ├── docs/
 │   ├── MODEL_EXPLAINER_ZH.md
+│   ├── PRESENTATION_RESULTS.md
 │   └── REPRODUCTION_LOG.md
+├── presentations/
+│   ├── README.md
+│   └── scMEDAL_AML_reproduction_results_v5.pptx
 ├── environment/
 │   ├── scmedal-aml-core.txt
 │   ├── comparables-core.txt
@@ -262,6 +277,7 @@ Do not rank FE and RE as if they solve the same task.
 │   ├── verify_outputs.py
 │   ├── collect_metrics.py
 │   ├── plot_fivefold_asw.py
+│   ├── plot_presentation_results.py
 │   ├── audit_counterfactual_outputs.py
 │   ├── analyze_aml_counterfactual.py
 │   ├── aml_counterfactual_analysis.pbs
@@ -275,5 +291,5 @@ Do not rank FE and RE as if they solve the same task.
 
 ## Remaining work
 
-- Prepare the final research report and presentation.
-- Consider a second public dataset and an encoder extension if project time allows.
+- Finalize presenter details, timing, and any course-specific formatting in the editable PPT. The required submission is the PPT only.
+- Future experiments may evaluate donor-held-out generalization, combined FE+RE prediction, or predefined FE loss-weight sensitivity. These experiments have not been added as completed results.

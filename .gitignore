@@ -33,3 +33,10 @@ results/raw/
 !results/**/*.csv
 !results/**/*.json
 
+# Course slides and presentation-only assets stay local
+*.pptx
+/presentations/
+/results/presentation/
+/docs/PRESENTATION_RESULTS.md
+/environment/presentation-plotting.txt
+/reproducibility/plot_presentation_results.py

@@ -4,17 +4,6 @@ Reproduction and evaluation of **scMEDAL (single-cell Mixed Effects Deep Autoenc
 
 This repository contains our reproducibility layer: environment notes, canonical run records, output validation, metric aggregation, and interpretation guidance. It does **not** redistribute the authors' dataset, trained weights, or large latent/reconstruction arrays.
 
-## Presentation (12 October 2026)
-
-The course submission is an editable PowerPoint presentation. Version 6 retains the completed AML results and adds an English speaking script below the Chinese notes on every slide. The cover expands AML as Acute Myeloid Leukemia. Source captions are recorded in speaker notes, with inline reference numbers and the reference slide retained.
-
-- [Download the editable presentation](presentations/scMEDAL_AML_reproduction_bilingual_v6.pptx).
-- [Slide map and editing guide](presentations/README.md).
-- [Results interpretation and figure provenance](docs/PRESENTATION_RESULTS.md).
-- [Small presentation figure/table outputs](results/presentation/).
-
-The deck has 23 main slides and two appendix slides. The final literature-extension appendix is hidden in slide-show mode. No group-contribution page is included. Model extensions and loss-weight tuning remain prospective.
-
 ## Project scope
 
 We use one public dataset, AML, to reproduce and compare:
@@ -263,11 +252,7 @@ Do not rank FE and RE as if they solve the same task.
 ├── README.md
 ├── docs/
 │   ├── MODEL_EXPLAINER_ZH.md
-│   ├── PRESENTATION_RESULTS.md
 │   └── REPRODUCTION_LOG.md
-├── presentations/
-│   ├── README.md
-│   └── scMEDAL_AML_reproduction_bilingual_v6.pptx
 ├── environment/
 │   ├── scmedal-aml-core.txt
 │   ├── comparables-core.txt
@@ -277,7 +262,6 @@ Do not rank FE and RE as if they solve the same task.
 │   ├── verify_outputs.py
 │   ├── collect_metrics.py
 │   ├── plot_fivefold_asw.py
-│   ├── plot_presentation_results.py
 │   ├── audit_counterfactual_outputs.py
 │   ├── analyze_aml_counterfactual.py
 │   ├── aml_counterfactual_analysis.pbs

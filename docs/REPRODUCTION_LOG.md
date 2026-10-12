@@ -84,5 +84,4 @@ Completed:
 
 Remaining:
 
-- Final report and presentation.
 - A second dataset and architecture extension, if included in the final scope.

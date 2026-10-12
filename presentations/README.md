@@ -1,10 +1,12 @@
 # Editable course presentation
 
-## Version 5 — 12 October 2026
+## Version 6 — 12 October 2026
 
-[Download scMEDAL_AML_reproduction_results_v5.pptx](scMEDAL_AML_reproduction_results_v5.pptx)
+[Download scMEDAL_AML_reproduction_bilingual_v6.pptx](scMEDAL_AML_reproduction_bilingual_v6.pptx)
 
-This revision follows the supplied version-4b design, integrates the completed AML evidence, and adds result interpretation, limitations, and reproducibility links. The submission deliverable is the editable PPT. No group-contribution page is included.
+This revision follows the version-5 design and evidence. Every slide has the original Chinese notes followed by an English speaking script. The cover gives the full name Acute Myeloid Leukemia (AML), with a brief explanation in its notes. Small source captions now appear in the notes, while inline reference numbers and the reference slide remain visible. The submission deliverable is the editable PPT. No group-contribution page is included.
+
+The [previous version 5](scMEDAL_AML_reproduction_results_v5.pptx) remains available for revision history.
 
 ## Slide map
 

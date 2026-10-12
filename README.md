@@ -6,9 +6,9 @@ This repository contains our reproducibility layer: environment notes, canonical
 
 ## Presentation (12 October 2026)
 
-The course submission is an editable PowerPoint presentation. Version 5 integrates the completed AML results, paired cell-type/patient-group UMAPs, donor-conditioned reconstruction summaries, and a discussion of evaluation boundaries.
+The course submission is an editable PowerPoint presentation. Version 6 retains the completed AML results and adds an English speaking script below the Chinese notes on every slide. The cover expands AML as Acute Myeloid Leukemia. Source captions are recorded in speaker notes, with inline reference numbers and the reference slide retained.
 
-- [Download the editable presentation](presentations/scMEDAL_AML_reproduction_results_v5.pptx).
+- [Download the editable presentation](presentations/scMEDAL_AML_reproduction_bilingual_v6.pptx).
 - [Slide map and editing guide](presentations/README.md).
 - [Results interpretation and figure provenance](docs/PRESENTATION_RESULTS.md).
 - [Small presentation figure/table outputs](results/presentation/).
@@ -267,7 +267,7 @@ Do not rank FE and RE as if they solve the same task.
 │   └── REPRODUCTION_LOG.md
 ├── presentations/
 │   ├── README.md
-│   └── scMEDAL_AML_reproduction_results_v5.pptx
+│   └── scMEDAL_AML_reproduction_bilingual_v6.pptx
 ├── environment/
 │   ├── scmedal-aml-core.txt
 │   ├── comparables-core.txt
@@ -288,8 +288,3 @@ Do not rank FE and RE as if they solve the same task.
 └── results/
     └── README.md
 ```
-
-## Remaining work
-
-- Finalize presenter details, timing, and any course-specific formatting in the editable PPT. The required submission is the PPT only.
-- Future experiments may evaluate donor-held-out generalization, combined FE+RE prediction, or predefined FE loss-weight sensitivity. These experiments have not been added as completed results.

@@ -1,0 +1,42 @@
+#!/bin/bash
+#PBS -N aml_fe_weight
+#PBS -q normal
+#PBS -l select=1:ngpus=1
+#PBS -l walltime=24:00:00
+#PBS -j oe
+
+set -euo pipefail
+
+: "${FE_PHASE:?Submit with FE_PHASE=pilot or formal}"
+: "${FE_VARIANT:?Submit with FE_VARIANT=baseline, adv05, adv2, or recon2000}"
+: "${FE_OUTPUT_BASE:?Submit with FE_OUTPUT_BASE pointing to your private scratch output directory}"
+: "${AUTHOR_REPO_ROOT:?Submit with AUTHOR_REPO_ROOT pointing to the upstream repository}"
+
+cd "$PBS_O_WORKDIR"
+echo "Started: $(date)"
+echo "Host: $(hostname)"
+echo "Phase: $FE_PHASE; variant: $FE_VARIANT"
+
+module load miniforge3/25.3.1
+module load cuda/11.8.0
+module load cudnn/11-8.9.4.25
+conda activate scmedal-aml
+
+export MPLBACKEND=Agg
+export PYTHONUNBUFFERED=1
+export TF_CPP_MIN_LOG_LEVEL=2
+export TF_FORCE_GPU_ALLOW_GROWTH=true
+export PYTHONHASHSEED=5
+export OMP_NUM_THREADS=16
+export OPENBLAS_NUM_THREADS=16
+
+python -c 'import tensorflow as tf; g=tf.config.list_physical_devices("GPU"); print("GPUs:", g); assert g, "TensorFlow cannot see a GPU"'
+
+python reproducibility/fe_weight_train.py \
+  --author-repo "$AUTHOR_REPO_ROOT" \
+  --output-base "$FE_OUTPUT_BASE" \
+  --phase "$FE_PHASE" \
+  --variant "$FE_VARIANT" \
+  --seed 5
+
+echo "Finished: $(date)"

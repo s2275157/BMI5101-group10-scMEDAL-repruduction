@@ -35,6 +35,26 @@ scMEDAL-RE counterfactual arrays were audited, and five-fold AML donor/batch
 visualizations and a donor-sensitivity table were generated for Mono and
 Mono-like source cells.
 
+An exploratory scMEDAL-FE loss-weight comparison is recorded in
+[`docs/FE_WEIGHT_SENSITIVITY.md`](docs/FE_WEIGHT_SENSITIVITY.md). The five-fold
+validation comparison of adversarial weights 1 and 2 is essentially tied; an
+adversarial weight of 0.5 is the next pilot experiment, not a completed result.
+
+For the next FE-weight pilot, copy the three scripts in [`reproducibility/`](reproducibility/)
+to the authors' repository, activate the validated `scmedal-aml` environment,
+and submit from that repository's root. Pass the private project and paths at
+submission time:
+
+```bash
+qsub -P <your_project> \
+  -v "FE_PHASE=pilot,FE_VARIANT=adv05,AUTHOR_REPO_ROOT=$PWD,FE_OUTPUT_BASE=/scratch/users/<institution>/<username>/scMEDAL_fe_weights" \
+  reproducibility/aml_fe_weight.pbs
+```
+
+This pilot trains fold 1 and evaluates validation only. Compare it with the
+existing seeded `baseline` pilot using `fe_weight_compare.py` before deciding
+whether to run the five-fold formal variant.
+
 ## What scMEDAL does
 
 For a cell expression vector `x` and one-hot batch label `z`, scMEDAL learns two complementary representations:

@@ -38,9 +38,10 @@ Mono-like source cells.
 An exploratory scMEDAL-FE loss-weight comparison is recorded in
 [`docs/FE_WEIGHT_SENSITIVITY.md`](docs/FE_WEIGHT_SENSITIVITY.md). The five-fold
 validation comparison of adversarial weights 1 and 2 is essentially tied; an
-adversarial weight of 0.5 is the next pilot experiment, not a completed result.
+adversarial weight of 0.5 and a reconstruction weight of 2000 were also screened
+on one validation fold and did not improve the predefined combined score.
 
-For the next FE-weight pilot, copy the three scripts in [`reproducibility/`](reproducibility/)
+To reproduce an FE-weight pilot, copy the three scripts in [`reproducibility/`](reproducibility/)
 to the authors' repository, activate the validated `scmedal-aml` environment,
 and submit from that repository's root. Pass the private project and paths at
 submission time:
@@ -51,9 +52,8 @@ qsub -P <your_project> \
   reproducibility/aml_fe_weight.pbs
 ```
 
-This pilot trains fold 1 and evaluates validation only. Compare it with the
-existing seeded `baseline` pilot using `fe_weight_compare.py` before deciding
-whether to run the five-fold formal variant.
+This command trains fold 1 and evaluates validation only. The recorded pilot is
+already complete; avoid resubmitting it into the same output directory.
 
 ## What scMEDAL does
 

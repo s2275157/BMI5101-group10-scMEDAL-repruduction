@@ -69,7 +69,7 @@ A run is accepted only when the job was submitted, the saved log finished withou
 
 Exact canonical run names are stored in [`../reproducibility/run_manifest.json`](../reproducibility/run_manifest.json). The private NSCC root and scheduler identifiers are retained in the private project record rather than this public repository. Downstream scripts must use this manifest and must not choose a run using an unconstrained glob.
 
-## Completed versus remaining
+## Final project scope
 
 Completed:
 
@@ -81,7 +81,11 @@ Completed:
 - Consistently configured fold-1 UMAP comparison including input PCA.
 - AML counterfactual donor/batch visualizations and five-fold descriptive
   stability analysis for Mono and Mono-like source cells.
+- A bounded FE loss-weight sensitivity analysis on validation data; the
+  original FE configuration was retained. See
+  [`FE_WEIGHT_SENSITIVITY.md`](FE_WEIGHT_SENSITIVITY.md).
 
-Remaining:
-
-- A second dataset and architecture extension, if included in the final scope.
+This submission is limited to the authors' preprocessed AML dataset. Training
+on a second dataset, changing the FE/RE architecture, donor-held-out
+validation, and FE+RE downstream prediction were not part of the completed
+experiments. No tuned-model test result is claimed.

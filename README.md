@@ -2,7 +2,7 @@
 
 Reproduction and evaluation of **scMEDAL (single-cell Mixed Effects Deep Autoencoder Learning)** on the authors' preprocessed Acute Myeloid Leukemia (AML) scRNA-seq dataset.
 
-This repository contains our reproducibility layer: environment notes, canonical run records, output validation, metric aggregation, and interpretation guidance. It does **not** redistribute the authors' dataset, trained weights, or large latent/reconstruction arrays.
+This repository contains the reproducibility and analysis code, documented environment, canonical run records, and small derived results. It does **not** redistribute the authors' dataset, trained weights, or large latent/reconstruction arrays.
 
 ## Project scope
 
@@ -18,7 +18,7 @@ We use one public dataset, AML, to reproduce and compare:
 
 All six trained representations use the authors' five supplied folds. The AML input contains 2,916 highly variable genes, 19 donor/batches, and 21 configured cell-type categories.
 
-## Current status (5 October 2026)
+## Reproduction status (13 October 2026)
 
 | Method | Formal five-fold run | Validation |
 |---|---:|---|
@@ -35,11 +35,13 @@ scMEDAL-RE counterfactual arrays were audited, and five-fold AML donor/batch
 visualizations and a donor-sensitivity table were generated for Mono and
 Mono-like source cells.
 
-An exploratory scMEDAL-FE loss-weight comparison is recorded in
+The completed, bounded scMEDAL-FE loss-weight sensitivity analysis is recorded in
 [`docs/FE_WEIGHT_SENSITIVITY.md`](docs/FE_WEIGHT_SENSITIVITY.md). The five-fold
 validation comparison of adversarial weights 1 and 2 is essentially tied; an
 adversarial weight of 0.5 and a reconstruction weight of 2000 were also screened
-on one validation fold and did not improve the predefined combined score.
+on one validation fold and did not improve the predefined combined score. The
+original FE configuration remains the primary result; test data were not used
+to select weights.
 
 To reproduce an FE-weight pilot, copy the three scripts in [`reproducibility/`](reproducibility/)
 to the authors' repository, activate the validated `scmedal-aml` environment,
@@ -271,7 +273,7 @@ Do not rank FE and RE as if they solve the same task.
 .
 ├── README.md
 ├── docs/
-│   ├── MODEL_EXPLAINER_ZH.md
+│   ├── FE_WEIGHT_SENSITIVITY.md
 │   └── REPRODUCTION_LOG.md
 ├── environment/
 │   ├── scmedal-aml-core.txt
@@ -288,7 +290,13 @@ Do not rank FE and RE as if they solve the same task.
 │   ├── aml_counterfactual_folds2to5.pbs
 │   ├── summarize_aml_counterfactual_fivefold.py
 │   ├── plot_six_method_umap.py
-│   └── aml_six_method_umap.pbs
+│   ├── aml_six_method_umap.pbs
+│   ├── fe_weight_train.py
+│   ├── fe_weight_compare.py
+│   └── aml_fe_weight.pbs
 └── results/
+    ├── metrics/
+    ├── figures/
+    ├── counterfactual/
     └── README.md
 ```

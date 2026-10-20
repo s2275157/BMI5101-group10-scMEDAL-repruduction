@@ -123,7 +123,6 @@ See [`environment/`](environment/) for the minimal recorded package sets. These 
 export SCMEDAL_FORMAL_ROOT=/scratch/users/<institution>/<username>/scMEDAL_formal
 ```
 
-Do not commit the expanded private path to a public repository.
 4. Validate the canonical runs:
 
 ```bash
@@ -144,11 +143,6 @@ Expected small outputs:
 - `results/metrics/test_metrics_long.csv`
 - `results/metrics/test_metrics_mean.csv`
 
-The generated tables retain only the source CSV filename, not the expanded private
-filesystem path, so the small metric outputs can be reviewed before publication.
-The scripts intentionally use exact canonical paths instead of selecting the newest
-directory with an unconstrained wildcard.
-
 6. Plot the primary five-fold ASW comparison with 95% confidence intervals:
 
 ```bash
@@ -165,8 +159,7 @@ Expected small outputs:
 - `results/figures/aml_asw_fivefold_95ci.csv`
 
 The error bars are 95% Student-t confidence intervals calculated from the
-five-fold SEM. scMEDAL-RE is displayed with the comparison but is interpreted
-as a batch-modeling representation, not ranked as a batch-correction method.
+five-fold SEM.
 
 7. Generate directly comparable UMAPs for Input PCA and all six canonical
    representations on the same AML cells (fold 1 training partition):
@@ -179,8 +172,7 @@ qsub -P <your_project> -q normal \
 
 The job uses the same 19 batches, seed 5, 15 neighbours, and min-max scaling
 for every representation. It writes batch-, cell-type-, and patient-group-coloured
-PNG files plus the UMAP-coordinate CSVs. These UMAPs are qualitative; the formal
-five-fold test summaries remain the quantitative comparison.
+PNG files plus the UMAP-coordinate CSVs. These UMAPs are qualitative.
 
 8. Audit the scMEDAL-RE counterfactual arrays before biological interpretation:
 
@@ -195,8 +187,7 @@ python reproducibility/audit_counterfactual_outputs.py \
 
 This reads only NumPy headers (`mmap_mode="r"`) and writes a public-safe file
 inventory, a fold/split summary, and a JSON audit record. It verifies that each
-counterfactual array has one row per source cell and one column per HVG; it does
-not redistribute reconstructed expression arrays.
+counterfactual array has one row per source cell and one column per HVG.
 
 9. Analyze the held-out test cells with `Mono` and `Mono-like` labels. The same
    source cells within each fold are reconstructed under all 19 target

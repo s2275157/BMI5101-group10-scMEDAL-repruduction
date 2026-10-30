@@ -8,7 +8,7 @@ This repository contains the reproducibility and analysis code, documented envir
 
 We use one public dataset, AML, to reproduce and compare:
 
-- scMEDAL-FE: batch-invariant fixed-effects representation.
+- scMEDAL-FE: fixed-effects representation designed to reduce batch information.
 - scMEDAL-RE: batch/donor-specific random-effects representation.
 - Harmony.
 - Scanorama.
@@ -16,7 +16,89 @@ We use one public dataset, AML, to reproduce and compare:
 - scANVI.
 - Input PCA is retained as an unintegrated reference, not a trained model.
 
-All six trained representations use the authors' five supplied folds. The AML input contains 2,916 highly variable genes, 19 donor/batches, and 21 configured cell-type categories.
+All six trained representations use the authors' five supplied folds. The AML input contains 38,417 cells, 2,916 highly variable genes, 19 source/batch labels (12 AML, 5 control, and 2 cell lines), and 21 configured cell-type categories.
+
+## Results at a glance
+
+### Six-method AML comparison (held-out test folds)
+
+The table reports the mean average silhouette width (ASW) across the same five
+held-out test folds. Cell-type ASW describes separation of annotated cell types;
+batch ASW describes separation of donor/batch labels. These are complementary
+diagnostics, not a single leaderboard.
+
+| Representation | Batch ASW | Cell-type ASW | Role in this study |
+|---|---:|---:|---|
+| scMEDAL-FE | -0.0377 | 0.0541 | FE representation designed to reduce batch information |
+| Harmony | -0.1067 | 0.0179 | Integration baseline |
+| Scanorama | -0.1702 | 0.0096 | Integration baseline |
+| scVI | -0.2361 | 0.0289 | Unsupervised probabilistic baseline |
+| scANVI | -0.1804 | 0.2137 | Cell-label-informed baseline |
+| scMEDAL-RE | 0.6850 | -0.0766 | Batch-specific representation, **not** a batch-correction baseline |
+
+FE has a higher mean cell-type ASW than Harmony, Scanorama, and scVI in this
+AML comparison, but its batch ASW is less negative, indicating weaker batch
+mixing by this metric.
+scANVI's cell-type result must be read in light of its use of cell-type labels.
+The RE result is expected to retain donor/batch structure; it should not be
+ranked as if RE had the same objective as FE. The full per-fold metrics and
+supporting CH and reciprocal DB scores are in
+[`results/metrics/`](results/metrics/); the plotted five-fold ASW comparison is
+[`here`](results/figures/aml_asw_fivefold_95ci.png).
+
+### FE loss-weight sensitivity (validation only)
+
+We kept the authors' FE architecture and AML preprocessing fixed, changing one
+loss weight at a time. The reference setting is reconstruction weight `1000`
+and adversarial/generator weight `1`. The screening criterion is the
+author-style objective `cell-type silhouette − batch silhouette`; higher is
+preferred for this combined score, but batch mixing and biological retention
+must also be inspected separately.
+
+**Fold-1 pilot (validation):**
+
+| FE setting | Reconstruction weight | Adversarial weight | Batch ASW | Cell-type ASW | Combined objective |
+|---|---:|---:|---:|---:|---:|
+| Original (`baseline`) | 1000 | 1 | -0.0382 | 0.0551 | **0.0933** |
+| `adv2` | 1000 | 2 | -0.0443 | 0.0488 | 0.0931 |
+| `adv05` | 1000 | 0.5 | -0.0171 | 0.0523 | 0.0694 |
+| `recon2000` | 2000 | 1 | -0.0098 | 0.0521 | 0.0618 |
+
+These pilot values each come from **one fold**, so they are screening evidence,
+not five-fold estimates (and a one-fold sample standard deviation is undefined).
+Only `adv2` was advanced to five-fold validation:
+
+| FE setting | Batch ASW, mean ± SD | Cell-type ASW, mean ± SD | Combined objective, mean ± SD |
+|---|---:|---:|---:|
+| Original FE (weight 1) | -0.0379 ± 0.0079 | 0.0535 ± 0.0029 | **0.0913 ± 0.0066** |
+| `adv2` (weight 2) | -0.0367 ± 0.0058 | 0.0544 ± 0.0045 | 0.0911 ± 0.0046 |
+
+**Decision:** `adv2` is essentially tied with the original FE setting on the
+five-fold validation summary; `adv05` and `recon2000` did not improve the
+combined score in the one-fold pilot. We therefore retain the **original FE
+weights (reconstruction 1000, adversarial 1)** as the primary benchmark. The
+original and tuned runs were separate trainings, and their random-seed
+comparability has not been audited; these summaries do not establish a
+statistically significant difference. No held-out test result was used to
+select weights, and the two pilot-only variants have no five-fold estimate.
+
+The full protocol, supporting CH/reciprocal-DB metrics, and run evidence are in
+[`docs/FE_WEIGHT_SENSITIVITY.md`](docs/FE_WEIGHT_SENSITIVITY.md). The runnable
+workflow is [`fe_weight_train.py`](reproducibility/fe_weight_train.py),
+[`aml_fe_weight.pbs`](reproducibility/aml_fe_weight.pbs), and
+[`fe_weight_compare.py`](reproducibility/fe_weight_compare.py). To reproduce a
+pilot, copy those three files into the authors' repository's `reproducibility/`
+directory, activate the documented environment, then submit from that
+repository's root using your own project and private paths:
+
+```bash
+qsub -P <your_project> \
+  -v "FE_PHASE=pilot,FE_VARIANT=adv05,AUTHOR_REPO_ROOT=$PWD,FE_OUTPUT_BASE=/scratch/users/<institution>/<username>/scMEDAL_fe_weights" \
+  reproducibility/aml_fe_weight.pbs
+```
+
+This command trains fold 1 and evaluates validation only. The recorded pilot
+is already complete; use a distinct output directory for a new run.
 
 ## Reproduction status (13 October 2026)
 
@@ -34,28 +116,6 @@ figure, and consistently configured fold-1 UMAPs have been generated. The
 scMEDAL-RE counterfactual arrays were audited, and five-fold AML donor/batch
 visualizations and a donor-sensitivity table were generated for Mono and
 Mono-like source cells.
-
-The completed, bounded scMEDAL-FE loss-weight sensitivity analysis is recorded in
-[`docs/FE_WEIGHT_SENSITIVITY.md`](docs/FE_WEIGHT_SENSITIVITY.md). The five-fold
-validation comparison of adversarial weights 1 and 2 is essentially tied; an
-adversarial weight of 0.5 and a reconstruction weight of 2000 were also screened
-on one validation fold and did not improve the predefined combined score. The
-original FE configuration remains the primary result; test data were not used
-to select weights.
-
-To reproduce an FE-weight pilot, copy the three scripts in [`reproducibility/`](reproducibility/)
-to the authors' repository, activate the validated `scmedal-aml` environment,
-and submit from that repository's root. Pass the private project and paths at
-submission time:
-
-```bash
-qsub -P <your_project> \
-  -v "FE_PHASE=pilot,FE_VARIANT=adv05,AUTHOR_REPO_ROOT=$PWD,FE_OUTPUT_BASE=/scratch/users/<institution>/<username>/scMEDAL_fe_weights" \
-  reproducibility/aml_fe_weight.pbs
-```
-
-This command trains fold 1 and evaluates validation only. The recorded pilot is
-already complete; avoid resubmitting it into the same output directory.
 
 ## What scMEDAL does
 

@@ -48,16 +48,24 @@ fold-1 training coordinate tables independently confirm 23,049 cells, all 19
 sources and 21 annotated cell types, with identical cell order across all seven
 plotted representations (Input PCA plus six methods).
 
+**Colored by cell type**
+
 ![FE and RE colored by cell type](results/umap/fe_re_celltype_fold1_train.png)
 
-These are stored fold-1 **training** UMAP coordinates. Colors change over the
-same coordinates within a representation. FE and RE have independently fitted
-maps, so their axes and absolute positions are not directly comparable.
-The canonical maps are from `AML_six_methods_train_split1`; the older FE/RE-only
-analysis contains a different UMAP fit of the same cells.
+**Colored by source/batch**
 
-[Source coloring](results/umap/fe_re_batch_fold1_train.png),
-[patient-group coloring](results/umap/fe_re_patient_group_fold1_train.png), and
+![FE and RE colored by source/batch](results/umap/fe_re_batch_fold1_train.png)
+
+Both figures show the same 23,049 fold-1 **training** cells. Within FE, and
+within RE, cell positions are identical in the two figures: only the coloring
+changes from cell type to source/batch. Here, the 19 batch labels identify the
+12 AML donors, five controls and two cell lines. FE and RE have independently
+fitted maps, so their axes and absolute positions are not directly comparable.
+Both figures use the stored coordinates from `AML_six_methods_train_split1`.
+Historical coordinate versions are explained in the
+[results reconciliation](docs/RESULTS_RECONCILIATION.md#umap-versions-and-presentation).
+
+[Patient-group coloring](results/umap/fe_re_patient_group_fold1_train.png) and
 [all-method cell-type view](results/umap/all_methods_celltype_fold1_train.png).
 
 ## 2. Six-method ASW comparison

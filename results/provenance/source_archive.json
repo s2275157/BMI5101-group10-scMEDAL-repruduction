@@ -1,0 +1,147 @@
+{
+  "source_archive": "scMEDAL_FE_RE_analysis.zip",
+  "source_sha256": "e4994533be602735abd6c7bc52c87e40d4022fd4f89cea107e54f626aec619c5",
+  "meaningful_archive_files": 147,
+  "copied_or_derived": [
+    {
+      "archive_path": "AML_six_methods_fivefold_metrics/metrics/test_metrics_long.csv",
+      "repository_path": "results/metrics/test_metrics_long.csv",
+      "source_sha256": "3fc2988b8f95de16518c74843f22c4441b22efba3579a12fc6b26f53168cf4ad",
+      "published_sha256": "3fc2988b8f95de16518c74843f22c4441b22efba3579a12fc6b26f53168cf4ad",
+      "transformation": "byte-preserving copy"
+    },
+    {
+      "archive_path": "AML_six_methods_fivefold_metrics/metrics/test_metrics_mean.csv",
+      "repository_path": "results/metrics/test_metrics_mean.csv",
+      "source_sha256": "b8808486600d2a6dbe5ba1111f9c8fae202b110d4b3c9122ada0ba63572113a3",
+      "published_sha256": "b8808486600d2a6dbe5ba1111f9c8fae202b110d4b3c9122ada0ba63572113a3",
+      "transformation": "byte-preserving copy"
+    },
+    {
+      "archive_path": "AML_counterfactual_fold1_test_mono_monolike/analysis_metadata.json",
+      "repository_path": "results/counterfactual/fold1_test_mono_monolike/analysis_metadata.json",
+      "source_sha256": "362d7243dbd04994884e0cd0375baba15751064f083b75e212412ec791278cb9",
+      "published_sha256": "362d7243dbd04994884e0cd0375baba15751064f083b75e212412ec791278cb9",
+      "transformation": "byte-preserving copy"
+    },
+    {
+      "archive_path": "AML_counterfactual_fold1_test_mono_monolike/gene_index.csv",
+      "repository_path": "results/counterfactual/fold1_test_mono_monolike/gene_index.csv",
+      "source_sha256": "94a5546be35c04fdc1c7195490dccc9308ea20b7d949a01c4d2da7f1a4a74cd4",
+      "published_sha256": "94a5546be35c04fdc1c7195490dccc9308ea20b7d949a01c4d2da7f1a4a74cd4",
+      "transformation": "byte-preserving copy"
+    },
+    {
+      "archive_path": "AML_counterfactual_fold1_test_mono_monolike/source_cell_summary.csv",
+      "repository_path": "results/counterfactual/fold1_test_mono_monolike/source_cell_summary.csv",
+      "source_sha256": "321c56b1bc5b38ed62cc2e1fb8ba6a77a23600cdbbdac82df0e1b0d8be268d51",
+      "published_sha256": "321c56b1bc5b38ed62cc2e1fb8ba6a77a23600cdbbdac82df0e1b0d8be268d51",
+      "transformation": "byte-preserving copy"
+    },
+    {
+      "archive_path": "AML_counterfactual_fold1_test_mono_monolike/aml_vs_control_gene_stats.csv",
+      "repository_path": "results/counterfactual/fold1_test_mono_monolike/aml_vs_control_gene_stats.csv",
+      "source_sha256": "70c5300a0846ce636f68f69a2427dcb81879233084f9e8607bc667a89287698b",
+      "published_sha256": "70c5300a0846ce636f68f69a2427dcb81879233084f9e8607bc667a89287698b",
+      "transformation": "byte-preserving copy"
+    },
+    {
+      "archive_path": "AML_counterfactual_fold1_test_mono_monolike/target_batch_gene_means.csv",
+      "repository_path": "results/counterfactual/fold1_test_mono_monolike/target_batch_gene_means.csv",
+      "source_sha256": "276e8268053b1d591774860d9b9175c42438997a5e9769b6f67f0ba3ee8984da",
+      "published_sha256": "c387d377428a2d28c7db619cb8565046c81353afcc6938ec098a6685f7d6c74c",
+      "transformation": "rename legacy index header to target_batch"
+    },
+    {
+      "archive_path": "AML_counterfactual_fold1_test_mono_monolike/top_genes.csv",
+      "repository_path": "results/counterfactual/fold1_test_mono_monolike/top_genes.csv",
+      "source_sha256": "81e4914407ba9d85bed34d0891f5c01393cc9c0fc2ebb9aab11101200a9a9414",
+      "published_sha256": "81e4914407ba9d85bed34d0891f5c01393cc9c0fc2ebb9aab11101200a9a9414",
+      "transformation": "byte-preserving copy"
+    },
+    {
+      "archive_path": "AML_counterfactual_fold1_test_mono_monolike/aml_counterfactual_top_genes_heatmap.png",
+      "repository_path": "results/counterfactual/fold1_test_mono_monolike/aml_counterfactual_top_genes_heatmap.png",
+      "source_sha256": "4422f218ff1634f5c8d7866d209cd04f72fca0efdd3f38a160a2ba6d931e732d",
+      "published_sha256": "4422f218ff1634f5c8d7866d209cd04f72fca0efdd3f38a160a2ba6d931e732d",
+      "transformation": "byte-preserving copy"
+    },
+    {
+      "archive_path": "AML_counterfactual_fold1_test_mono_monolike/aml_counterfactual_top_genes_heatmap.pdf",
+      "repository_path": "results/counterfactual/fold1_test_mono_monolike/aml_counterfactual_top_genes_heatmap.pdf",
+      "source_sha256": "bc8b16b9e60260288c7f0372d03195f09d92269f3ebbf4f772de569ec9fe554c",
+      "published_sha256": "bc8b16b9e60260288c7f0372d03195f09d92269f3ebbf4f772de569ec9fe554c",
+      "transformation": "byte-preserving copy"
+    },
+    {
+      "archive_path": "AML_counterfactual_fivefold_mono_monolike/aml_counterfactual_fivefold_control_leaveoneout.csv",
+      "repository_path": "results/counterfactual/fivefold_mono_monolike/aml_counterfactual_fivefold_control_leaveoneout.csv",
+      "source_sha256": "f005b80bd55e6305531cf2def21da48b1c805c747d646bca4870b06afb142273",
+      "published_sha256": "f005b80bd55e6305531cf2def21da48b1c805c747d646bca4870b06afb142273",
+      "transformation": "byte-preserving copy"
+    },
+    {
+      "archive_path": "AML_counterfactual_fivefold_mono_monolike/aml_counterfactual_fivefold_donor_means.pdf",
+      "repository_path": "results/counterfactual/fivefold_mono_monolike/aml_counterfactual_fivefold_donor_means.pdf",
+      "source_sha256": "1e22040ad62a0c6b46daf1589445deec633f9bb39002c81af642a88dde613360",
+      "published_sha256": "1e22040ad62a0c6b46daf1589445deec633f9bb39002c81af642a88dde613360",
+      "transformation": "byte-preserving copy"
+    },
+    {
+      "archive_path": "AML_counterfactual_fivefold_mono_monolike/aml_counterfactual_fivefold_donor_means.png",
+      "repository_path": "results/counterfactual/fivefold_mono_monolike/aml_counterfactual_fivefold_donor_means.png",
+      "source_sha256": "3c5f454e35e7da54b855337450a8e3e12fbe3ebc64fe71bc2ad3ec78ded81ce6",
+      "published_sha256": "3c5f454e35e7da54b855337450a8e3e12fbe3ebc64fe71bc2ad3ec78ded81ce6",
+      "transformation": "byte-preserving copy"
+    },
+    {
+      "archive_path": "AML_counterfactual_fivefold_mono_monolike/aml_counterfactual_fivefold_gene_effects.pdf",
+      "repository_path": "results/counterfactual/fivefold_mono_monolike/aml_counterfactual_fivefold_gene_effects.pdf",
+      "source_sha256": "23f67c243aff7f464f9286ab1d151ac0b4b7d5fbd00bc1793ca6a80c2a9dfe0e",
+      "published_sha256": "23f67c243aff7f464f9286ab1d151ac0b4b7d5fbd00bc1793ca6a80c2a9dfe0e",
+      "transformation": "byte-preserving copy"
+    },
+    {
+      "archive_path": "AML_counterfactual_fivefold_mono_monolike/aml_counterfactual_fivefold_gene_effects.png",
+      "repository_path": "results/counterfactual/fivefold_mono_monolike/aml_counterfactual_fivefold_gene_effects.png",
+      "source_sha256": "6de96365b4a3085d962a838a5cc028dcb6d99077336befc5926845daf3ba7cc5",
+      "published_sha256": "6de96365b4a3085d962a838a5cc028dcb6d99077336befc5926845daf3ba7cc5",
+      "transformation": "byte-preserving copy"
+    },
+    {
+      "archive_path": "AML_counterfactual_fivefold_mono_monolike/aml_counterfactual_fivefold_gene_stability.csv",
+      "repository_path": "results/counterfactual/fivefold_mono_monolike/aml_counterfactual_fivefold_gene_stability.csv",
+      "source_sha256": "d24247eee40fec6a31f611d4b4518e86ba3f5edc1961683a1c36e24fff532780",
+      "published_sha256": "d24247eee40fec6a31f611d4b4518e86ba3f5edc1961683a1c36e24fff532780",
+      "transformation": "byte-preserving copy"
+    },
+    {
+      "archive_path": "AML_counterfactual_fivefold_mono_monolike/aml_counterfactual_fivefold_selected_donor_means.csv",
+      "repository_path": "results/counterfactual/fivefold_mono_monolike/aml_counterfactual_fivefold_selected_donor_means.csv",
+      "source_sha256": "55777ad9163e7f0bb78561f23f770169ac2aad58a77f8d0f38f2919ff98193f9",
+      "published_sha256": "55777ad9163e7f0bb78561f23f770169ac2aad58a77f8d0f38f2919ff98193f9",
+      "transformation": "byte-preserving copy"
+    },
+    {
+      "archive_path": "AML_counterfactual_fivefold_mono_monolike/aml_counterfactual_fivefold_summary.json",
+      "repository_path": "results/counterfactual/fivefold_mono_monolike/aml_counterfactual_fivefold_summary.json",
+      "source_sha256": "701c7c12fcffcdc25ddf917f804e32e80b7cc7f96260236288419c6fc2562a40",
+      "published_sha256": "701c7c12fcffcdc25ddf917f804e32e80b7cc7f96260236288419c6fc2562a40",
+      "transformation": "byte-preserving copy"
+    },
+    {
+      "archive_path": "AML_FE_RE_only_2026-09-23/test_allscores.csv",
+      "repository_path": "results/metrics/fe_re_test_per_fold.csv",
+      "source_sha256": "f71aa9a121e2553638ed4db05320cac1aa5e4bbea6ff99111d763826abf46f5f",
+      "published_sha256": "46374a8ff323be8fee9a529ff7c42b09827acaf3802a9ca2e62da272649b2d78",
+      "transformation": "reshape multi-header fold table into 60 explicit metric rows; sample size is the requested metric setting"
+    }
+  ],
+  "excluded_from_public_copy": [
+    "per-cell UMAP CSVs with source annotations",
+    "macOS resource forks and Finder metadata",
+    "legacy/duplicate figure variants",
+    "source ZIP"
+  ],
+  "scope": "Archived summary evidence; no fresh model training"
+}

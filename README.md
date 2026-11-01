@@ -1,353 +1,176 @@
-# BMI5101 Group 10 - scMEDAL AML Reproduction
+# BMI5101 Group 10: scMEDAL AML reproduction
 
-Reproduction and evaluation of **scMEDAL (single-cell Mixed Effects Deep Autoencoder Learning)** on the authors' preprocessed Acute Myeloid Leukemia (AML) scRNA-seq dataset.
+We reproduced and evaluated the authors' scMEDAL implementation on their
+preprocessed acute myeloid leukemia (AML) data. The project compares six
+50-dimensional representations across five supplied cell-level folds and
+examines model-generated source-condition reconstructions.
 
-This repository contains the reproducibility and analysis code, documented environment, canonical run records, and small derived results. It does **not** redistribute the authors' dataset, trained weights, or large latent/reconstruction arrays.
+The three questions are:
 
-## Project scope
+1. Do FE and RE retain different source-related structure?
+2. How do the six representations compare under the implemented protocol?
+3. How do predicted gene patterns change across target-source conditions?
 
-We use one public dataset, AML, to reproduce and compare:
+The result bundle was reconciled on **1 November 2026** against the supplied
+`scMEDAL_FE_RE_analysis.zip`. Its SHA-256 and file provenance are recorded in
+[`results/provenance/source_archive.json`](results/provenance/source_archive.json).
+This repository contains small derived results and analysis code. Source data,
+per-cell annotation tables, model arrays and presentation files stay local.
 
-- scMEDAL-FE: fixed-effects representation designed to reduce batch information.
-- scMEDAL-RE: batch/donor-specific random-effects representation.
-- Harmony.
-- Scanorama.
-- scVI.
-- scANVI.
-- Input PCA is retained as an unintegrated reference, not a trained model.
+## Start here
 
-All six trained representations use the authors' five supplied folds. The AML input contains 38,417 cells, 2,916 highly variable genes, 19 source/batch labels (12 AML, 5 control, and 2 cell lines), and 21 configured cell-type categories.
+- [Results reconciliation and evidence](docs/RESULTS_RECONCILIATION.md)
+- [Protocol limitations](docs/AUDIT_PROTOCOL.md)
+- [Reproduce the checks or repeat the recorded workflow](docs/REPRODUCING.md)
+- [Presentation guide and short defense answers](docs/PRESENTATION_GUIDE.md)
 
-## Results at a glance
-
-### Six-method AML comparison (held-out test folds)
-
-The table reports the mean average silhouette width (ASW) across the same five
-held-out test folds. Cell-type ASW describes separation of annotated cell types;
-batch ASW describes separation of donor/batch labels. These are complementary
-diagnostics, not a single leaderboard.
-
-| Representation | Batch ASW | Cell-type ASW | Role in this study |
-|---|---:|---:|---|
-| scMEDAL-FE | -0.0377 | 0.0541 | FE representation designed to reduce batch information |
-| Harmony | -0.1067 | 0.0179 | Integration baseline |
-| Scanorama | -0.1702 | 0.0096 | Integration baseline |
-| scVI | -0.2361 | 0.0289 | Unsupervised probabilistic baseline |
-| scANVI | -0.1804 | 0.2137 | Cell-label-informed baseline |
-| scMEDAL-RE | 0.6850 | -0.0766 | Batch-specific representation, **not** a batch-correction baseline |
-
-FE has a higher mean cell-type ASW than Harmony, Scanorama, and scVI in this
-AML comparison, but its batch ASW is less negative, indicating weaker batch
-mixing by this metric.
-scANVI's cell-type result must be read in light of its use of cell-type labels.
-The RE result is expected to retain donor/batch structure; it should not be
-ranked as if RE had the same objective as FE. The full per-fold metrics and
-supporting CH and reciprocal DB scores are in
-[`results/metrics/`](results/metrics/); the plotted five-fold ASW comparison is
-[`here`](results/figures/aml_asw_fivefold_95ci.png).
-
-### FE loss-weight sensitivity (validation only)
-
-We kept the authors' FE architecture and AML preprocessing fixed, changing one
-loss weight at a time. The reference setting is reconstruction weight `1000`
-and adversarial/generator weight `1`. The screening criterion is the
-author-style objective `cell-type silhouette − batch silhouette`; higher is
-preferred for this combined score, but batch mixing and biological retention
-must also be inspected separately.
-
-**Fold-1 pilot (validation):**
-
-| FE setting | Reconstruction weight | Adversarial weight | Batch ASW | Cell-type ASW | Combined objective |
-|---|---:|---:|---:|---:|---:|
-| Original (`baseline`) | 1000 | 1 | -0.0382 | 0.0551 | **0.0933** |
-| `adv2` | 1000 | 2 | -0.0443 | 0.0488 | 0.0931 |
-| `adv05` | 1000 | 0.5 | -0.0171 | 0.0523 | 0.0694 |
-| `recon2000` | 2000 | 1 | -0.0098 | 0.0521 | 0.0618 |
-
-These pilot values each come from **one fold**, so they are screening evidence,
-not five-fold estimates (and a one-fold sample standard deviation is undefined).
-Only `adv2` was advanced to five-fold validation:
-
-| FE setting | Batch ASW, mean ± SD | Cell-type ASW, mean ± SD | Combined objective, mean ± SD |
-|---|---:|---:|---:|
-| Original FE (weight 1) | -0.0379 ± 0.0079 | 0.0535 ± 0.0029 | **0.0913 ± 0.0066** |
-| `adv2` (weight 2) | -0.0367 ± 0.0058 | 0.0544 ± 0.0045 | 0.0911 ± 0.0046 |
-
-**Decision:** `adv2` is essentially tied with the original FE setting on the
-five-fold validation summary; `adv05` and `recon2000` did not improve the
-combined score in the one-fold pilot. We therefore retain the **original FE
-weights (reconstruction 1000, adversarial 1)** as the primary benchmark. The
-original and tuned runs were separate trainings, and their random-seed
-comparability has not been audited; these summaries do not establish a
-statistically significant difference. No held-out test result was used to
-select weights, and the two pilot-only variants have no five-fold estimate.
-
-The full protocol, supporting CH/reciprocal-DB metrics, and run evidence are in
-[`docs/FE_WEIGHT_SENSITIVITY.md`](docs/FE_WEIGHT_SENSITIVITY.md). The runnable
-workflow is [`fe_weight_train.py`](reproducibility/fe_weight_train.py),
-[`aml_fe_weight.pbs`](reproducibility/aml_fe_weight.pbs), and
-[`fe_weight_compare.py`](reproducibility/fe_weight_compare.py). To reproduce a
-pilot, copy those three files into the authors' repository's `reproducibility/`
-directory, activate the documented environment, then submit from that
-repository's root using your own project and private paths:
+To recalculate the public results, use a separate Python 3.12 environment:
 
 ```bash
-qsub -P <your_project> \
-  -v "FE_PHASE=pilot,FE_VARIANT=adv05,AUTHOR_REPO_ROOT=$PWD,FE_OUTPUT_BASE=/scratch/users/<institution>/<username>/scMEDAL_fe_weights" \
-  reproducibility/aml_fe_weight.pbs
+python3.12 -m venv .venv-analysis
+.venv-analysis/bin/python -m pip install -r environment/analysis-review-core.txt
+.venv-analysis/bin/python reproducibility/verify_archived_results.py
 ```
 
-This command trains fold 1 and evaluates validation only. The recorded pilot
-is already complete; use a distinct output directory for a new run.
+This verifies the archived summaries without retraining or requiring a GPU.
 
-## Reproduction status (13 October 2026)
+## 1. FE and RE describe complementary source structure
 
-| Method | Formal five-fold run | Validation |
-|---|---:|---|
-| scMEDAL-FE | Complete | Log and artefacts checked |
-| scMEDAL-RE | Complete | Log, five splits, and 285 counterfactual arrays checked |
-| Harmony | Complete | 5 splits, 15 latent arrays, 6 score CSVs, 0 empty files |
-| Scanorama | Complete | 5 splits, 15 latent arrays, 6 score CSVs, 0 empty files |
-| scVI | Complete | 5 splits, 15 latent arrays, 6 score CSVs, 0 empty files |
-| scANVI | Complete | 5 splits, 15 latent arrays, 6 score CSVs, 0 empty files |
+Both networks reconstruct the expression input and are trained separately.
+FE uses an adversarial batch classifier to reduce source-predictive information.
+RE uses source-conditioned probabilistic effects and a positive batch-classifier
+objective to retain source-associated structure. Neither representation is
+guaranteed to isolate pure biology or pure technical noise.
 
-Training is complete. The six-method five-fold test summaries, primary ASW
-figure, and consistently configured fold-1 UMAPs have been generated. The
-scMEDAL-RE counterfactual arrays were audited, and five-fold AML donor/batch
-visualizations and a donor-sensitivity table were generated for Mono and
-Mono-like source cells.
+The configured AML dataset contains 38,417 cells, 2,916 selected genes and 19
+source labels: 12 AML donors, five controls and two cell lines. The supplied
+fold-1 training coordinate tables independently confirm 23,049 cells, all 19
+sources and 21 annotated cell types, with identical cell order across all seven
+plotted representations (Input PCA plus six methods).
 
-## What scMEDAL does
+![FE and RE colored by cell type](results/umap/fe_re_celltype_fold1_train.png)
 
-For a cell expression vector `x` and one-hot batch label `z`, scMEDAL learns two complementary representations:
+These are stored fold-1 **training** UMAP coordinates. Colors change over the
+same coordinates within a representation. FE and RE have independently fitted
+maps, so their axes and absolute positions are not directly comparable.
+The canonical maps are from `AML_six_methods_train_split1`; the older FE/RE-only
+analysis contains a different UMAP fit of the same cells.
 
-1. **scMEDAL-FE** uses an autoencoder plus an adversarial batch classifier. The encoder is rewarded for reconstructing expression but penalized when batch can be predicted from its features. Its latent space is intended to be batch-invariant.
-2. **scMEDAL-RE** is a Bayesian autoencoder conditioned on the batch label. A positively weighted batch classifier and variational/KL regularization encourage it to model batch-specific structure.
+[Source coloring](results/umap/fe_re_batch_fold1_train.png),
+[patient-group coloring](results/umap/fe_re_patient_group_fold1_train.png), and
+[all-method cell-type view](results/umap/all_methods_celltype_fold1_train.png).
 
-The two subnetworks are trained separately. Their latent representations may then be concatenated for downstream prediction. This is conceptually inspired by mixed-effects decomposition, but it is not a jointly estimated classical linear mixed-effects model.
+## 2. Six-method ASW comparison
 
-### Counterfactual reconstruction
+Values are mean +/- SD on the five supplied test subsets.
 
-The RE decoder can hold the learned cell representation fixed while replacing `z` with another donor/batch label. The resulting reconstruction asks:
+| Representation | Batch ASW | Cell-type ASW |
+|---|---:|---:|
+| scMEDAL-FE | -0.0377 +/- 0.0065 | 0.0541 +/- 0.0026 |
+| scMEDAL-RE | 0.6850 +/- 0.0255 | -0.0766 +/- 0.0065 |
+| Harmony | -0.1067 +/- 0.0010 | 0.0179 +/- 0.0024 |
+| Scanorama | -0.1702 +/- 0.0143 | 0.0096 +/- 0.0109 |
+| scVI | -0.2361 +/- 0.0071 | 0.0289 +/- 0.0116 |
+| scANVI | -0.1804 +/- 0.0054 | 0.2137 +/- 0.0044 |
 
-> What expression profile would this model generate for the same encoded cell if it were assigned to another donor/batch?
+![ASW comparison](results/figures/aml_asw_fivefold_95ci.png)
 
-This is a model-generated **as-if reconstruction** conditioned on a substituted
-donor/batch label.
+FE has a higher mean cell-type ASW than Harmony, Scanorama and scVI in these
+runs, with modest absolute separation. RE has strong source-label structure,
+consistent with its modeling objective. scANVI uses cell-type supervision.
 
-## Data and upstream code
+Interpretation depends on the protocol:
 
-- Paper: [Nature Communications (2026), DOI 10.1038/s41467-026-72666-4](https://doi.org/10.1038/s41467-026-72666-4)
-- Authors' code: [DeepLearningForPrecisionHealthLab/scMEDAL_for_scRNAseq](https://github.com/DeepLearningForPrecisionHealthLab/scMEDAL_for_scRNAseq)
-- Authors' preprocessed data and outputs: [Figshare 10.6084/m9.figshare.28414367](https://doi.org/10.6084/m9.figshare.28414367)
-- AML source dataset: GEO GSE116256
+- Harmony and Scanorama concatenate train, validation and test cells for
+  integration. Their scored test embeddings are transductive.
+- The recorded scVI/scANVI runs use log-transformed, min-max-scaled `X` with a
+  ZINB likelihood. Standard count-based use ordinarily requires raw counts.
+  A corrected-input benchmark would require new training.
+- scVI/scANVI reserve 10% of the supplied training partition internally for
+  validation. Their early-stopping procedure differs from FE/RE.
+- Raw batch ASW measures label clustering. A more negative value alone does
+  not establish better integration. Cell-type preservation and composition matter.
+- Folds reuse sources. Nominal t intervals across overlapping folds describe
+  fold variation and do not establish independent new-donor uncertainty or
+  significant superiority between methods.
 
-Follow the upstream repository's license. This repository does not grant additional rights over the authors' code or data.
+Source tables: [36 aggregate metric rows](results/metrics/test_metrics_long.csv),
+[six-method mean table](results/metrics/test_metrics_mean.csv), and
+[60 FE/RE per-fold measurements](results/metrics/fe_re_test_per_fold.csv).
+All six aggregate summaries match the supplied archive. FE/RE means and SDs
+were also recalculated from the fold measurements. The archive does not include
+the four other methods' individual fold measurements.
 
-## Compute environment
+## 3. Source-condition reconstructions are exploratory
 
-Formal experiments were run on **NSCC ASPIRE 2A** using PBS jobs.
-
-### scMEDAL-FE / scMEDAL-RE
-
-- Python 3.8.20
-- TensorFlow 2.13.1
-- TensorFlow Probability 0.21.0
-- TensorFlow Addons 0.21.0
-- NumPy 1.24.3
-- Scanpy 1.9.8
-- AnnData 0.9.2
-- CUDA 11.8 and cuDNN 8.9 modules on an NVIDIA A100 node
-
-### Harmony / Scanorama
-
-- Separate Python 3.11 environment: `scmedal-comparables`
-- CPU formal jobs
-
-### scVI / scANVI
-
-- Separate Python 3.11 environment: `scmedal-scvi`
-- PyTorch 2.2.0 CUDA 11.8 build
-- scvi-tools 1.3.0
-- GPU formal jobs
-
-See [`environment/`](environment/) for the minimal recorded package sets. These files describe the validated core stack; they are not a byte-for-byte export of every transitive package.
-
-## Reproducing the validation and metric aggregation
-
-1. Clone the authors' repository and obtain the authors' preprocessed AML splits.
-2. Train each method using the same five folds, 50-dimensional latent spaces, and sample size of 10,000 for clustering metrics.
-3. Set the private formal-output root, then use the exact canonical run names in [`reproducibility/run_manifest.json`](reproducibility/run_manifest.json):
-
-```bash
-export SCMEDAL_FORMAL_ROOT=/scratch/users/<institution>/<username>/scMEDAL_formal
-```
-
-4. Validate the canonical runs:
-
-```bash
-python reproducibility/verify_outputs.py \
-  --manifest reproducibility/run_manifest.json
-```
-
-5. Aggregate the five-fold test summaries:
-
-```bash
-python reproducibility/collect_metrics.py \
-  --manifest reproducibility/run_manifest.json \
-  --output-dir results/metrics
-```
-
-Expected small outputs:
-
-- `results/metrics/test_metrics_long.csv`
-- `results/metrics/test_metrics_mean.csv`
-
-6. Plot the primary five-fold ASW comparison with 95% confidence intervals:
-
-```bash
-python reproducibility/plot_fivefold_asw.py \
-  --metrics results/metrics/test_metrics_long.csv \
-  --output-dir results/figures \
-  --folds 5
-```
-
-Expected small outputs:
-
-- `results/figures/aml_asw_fivefold_95ci.png`
-- `results/figures/aml_asw_fivefold_95ci.pdf`
-- `results/figures/aml_asw_fivefold_95ci.csv`
-
-The error bars are 95% Student-t confidence intervals calculated from the
-five-fold SEM.
-
-7. Generate directly comparable UMAPs for Input PCA and all six canonical
-   representations on the same AML cells (fold 1 training partition):
-
-```bash
-qsub -P <your_project> -q normal \
-  -v AUTHOR_REPO_ROOT=/path/to/scMEDAL_for_scRNAseq,SCMEDAL_FORMAL_ROOT=/path/to/scMEDAL_formal,UMAP_OUTPUT_ROOT=/path/to/scMEDAL_visualizations \
-  reproducibility/aml_six_method_umap.pbs
-```
-
-The job uses the same 19 batches, seed 5, 15 neighbours, and min-max scaling
-for every representation. It writes batch-, cell-type-, and patient-group-coloured
-PNG files plus the UMAP-coordinate CSVs. These UMAPs are qualitative.
-
-8. Audit the scMEDAL-RE counterfactual arrays before biological interpretation:
-
-```bash
-python reproducibility/audit_counterfactual_outputs.py \
-  --manifest reproducibility/run_manifest.json \
-  --data-root /path/to/scMEDAL_for_scRNAseq/data/AML_data/log_transformed_2916hvggenes \
-  --output-dir results/counterfactual \
-  --expected-targets 19 \
-  --expected-genes 2916
-```
-
-This reads only NumPy headers (`mmap_mode="r"`) and writes a public-safe file
-inventory, a fold/split summary, and a JSON audit record. It verifies that each
-counterfactual array has one row per source cell and one column per HVG.
-
-9. Analyze the held-out test cells with `Mono` and `Mono-like` labels. The same
-   source cells within each fold are reconstructed under all 19 target
-   donor/batch conditions. On ASPIRE 2A, the supplied PBS scripts run fold 1
-   and the fold 2–5 array job:
-
-```bash
-qsub -P <your_project> -q normal \
-  -v AUTHOR_REPO_ROOT=/path/to/scMEDAL_for_scRNAseq,SCMEDAL_FORMAL_ROOT=/path/to/scMEDAL_formal \
-  reproducibility/aml_counterfactual_analysis.pbs
-
-qsub -P <your_project> -q normal \
-  -v AUTHOR_REPO_ROOT=/path/to/scMEDAL_for_scRNAseq,SCMEDAL_FORMAL_ROOT=/path/to/scMEDAL_formal \
-  reproducibility/aml_counterfactual_folds2to5.pbs
-```
-
-Each job calls [`analyze_aml_counterfactual.py`](reproducibility/analyze_aml_counterfactual.py).
-It writes a gene-level AML minus control target-donor comparison and a
-19-target heatmap. The statistics use target donors as units: 12 AML and 5
-controls. The two cell lines appear descriptively in the heatmap.
-
-10. After all five fold directories exist, summarize effect direction and
-    selected donor responses:
-
-```bash
-python reproducibility/summarize_aml_counterfactual_fivefold.py \
-  --input-root results/counterfactual \
-  --output-dir results/counterfactual/fivefold_mono_monolike
-```
-
-The summary checks gene-index and donor mappings across folds. It reports
-per-fold effect sizes, the number of folds with the same direction, how often
-each gene enters the fold's top 30 by absolute difference, and the effect of
-omitting each control donor for five selected genes. The same target donors
-recur across folds, so these are descriptive stability summaries.
-
-### AML counterfactual results
-
-The five-fold effect heatmap is
-[`aml_counterfactual_fivefold_gene_effects.png`](results/counterfactual/fivefold_mono_monolike/aml_counterfactual_fivefold_gene_effects.png).
-The selected-gene donor plot is
-[`aml_counterfactual_fivefold_donor_means.png`](results/counterfactual/fivefold_mono_monolike/aml_counterfactual_fivefold_donor_means.png);
-its dots show the five-fold mean and error bars show fold standard deviation.
-The source cells number 996–999 per held-out fold.
-
-`SAMSN1` has a negative AML minus control target-donor difference in all five
-folds (mean −0.07132) and enters the top 30 in all five. `TXNIP` and `FTL` also
-have negative differences in all five folds. Their directions persist when
-each control donor is omitted in turn; their magnitudes vary by donor,
-including BM5. `CENPE` and `SRGN` show less consistent per-fold responses in
-the donor sensitivity table. The complete small result tables are in
-[`results/counterfactual/fivefold_mono_monolike/`](results/counterfactual/fivefold_mono_monolike/).
-
-The gene-level comparisons are exploratory: fold 1 has no gene with
-Benjamini–Hochberg FDR below 0.05 among the 2,916 tested genes. AML/control
-labels are associated with target donor/batch identity in this dataset. The
-figures characterize model-generated target-condition patterns for this one
-AML dataset.
-
-## How to interpret the comparison
-
-The evaluation has two different objectives:
-
-- For batch-correction/batch-invariant methods, lower batch clustering together with preserved cell-type clustering is desirable.
-- For scMEDAL-RE, strong batch/donor separation is expected because its purpose is to model batch-specific variation.
-
-ASW is the primary metric in the paper. CH and reciprocal DB (`1/DB`) are supporting metrics. UMAP is qualitative; independently fitted UMAP axes, rotations, and distances are not directly comparable between panels.
-
-Do not rank FE and RE as if they solve the same task.
-
-## Repository map
+The archived RE generator holds source expression `x` fixed, substitutes a
+target source label and runs the complete autoencoder:
 
 ```text
-.
-├── README.md
-├── docs/
-│   ├── FE_WEIGHT_SENSITIVITY.md
-│   └── REPRODUCTION_LOG.md
-├── environment/
-│   ├── scmedal-aml-core.txt
-│   ├── comparables-core.txt
-│   └── scvi-core.txt
-├── reproducibility/
-│   ├── run_manifest.json
-│   ├── verify_outputs.py
-│   ├── collect_metrics.py
-│   ├── plot_fivefold_asw.py
-│   ├── audit_counterfactual_outputs.py
-│   ├── analyze_aml_counterfactual.py
-│   ├── aml_counterfactual_analysis.pbs
-│   ├── aml_counterfactual_folds2to5.pbs
-│   ├── summarize_aml_counterfactual_fivefold.py
-│   ├── plot_six_method_umap.py
-│   ├── aml_six_method_umap.pbs
-│   ├── fe_weight_train.py
-│   ├── fe_weight_compare.py
-│   └── aml_fe_weight.pbs
-└── results/
-    ├── metrics/
-    ├── figures/
-    ├── counterfactual/
-    └── README.md
+r_target = RE_encoder(x, z_target)
+xhat_target = RE_decoder(r_target, z_target)
 ```
+
+The target label enters both encoder and decoder, so the latent is recomputed.
+For each gene, we average over the selected Mono/Mono-like source cells, then
+compare the average of 12 AML-target donor means with five control-target means.
+The two cell lines are descriptive targets. These are model-generated as-if
+associations, with disease, individual and technical contributions confounded.
+
+- **216 of 2,916 genes (7.4%)** have the same predicted direction in all five
+  source-cell folds. Target donors recur across folds.
+- `SAMSN1`, `TXNIP` and `FTL` are lower under AML targets in all five folds;
+  `HIST1H1D` is higher. These are exploratory model patterns.
+- In fold 1, all **2,916** Mann-Whitney U tests and BH adjustments were
+  recalculated from the archived target means. **Zero genes have BH-FDR < 0.05**;
+  the minimum adjusted value is **0.1142**.
+- `SAMSN1` changes from **-0.0713** to **-0.0565** after omitting control BM5.
+  Its direction persists across all five leave-one-control-out checks, while
+  magnitude depends on the sources included.
+
+[Complete fold-1 tests and target means](results/counterfactual/fold1_test_mono_monolike/)
+and [five-fold stability and donor sensitivity](results/counterfactual/fivefold_mono_monolike/).
+Fold 1 uses 999 selected source cells; the five fold counts are 999, 998, 997,
+999 and 996. This analysis supplies hypotheses, rather than validated biomarkers
+or causal estimates.
+
+## Additional FE weight-sensitivity records
+
+Separate experiment notes report a single-fold pilot and five-fold validation
+of adversarial weight 2. Its documented combined score (cell-type ASW minus
+batch ASW) is 0.0911 +/- 0.0046, versus 0.0913 +/- 0.0066 for original FE.
+The original weights (reconstruction 1000, adversarial 1) remain the benchmark.
+**The supplied result ZIP does not contain the tuning score CSVs or logs.**
+These remain documented summaries, with unaudited historical seed comparability.
+See [the retained sensitivity record](docs/FE_WEIGHT_SENSITIVITY.md).
+
+## Scope and reproducibility
+
+Recorded training ran on NSCC ASPIRE 2A. Exact canonical output directories are
+in [`run_manifest.json`](reproducibility/run_manifest.json); the private root is
+supplied through `SCMEDAL_FORMAL_ROOT`. Training environments and the separate
+analysis environment are in [`environment/`](environment/).
+
+This work covers the authors' preprocessed AML implementation. FASTQ processing,
+new-donor generalization and combined FE+RE downstream prediction are outside
+the completed scope. The supplied 2025 preprint describes settings and scores
+that differ from these 50-dimensional runs. Exact numerical reproduction of
+every paper result has not been established. Historical training commit/patches
+and the large original arrays were not supplied in this ZIP.
+
+## Sources and repository map
+
+- [Journal article (2026)](https://doi.org/10.1038/s41467-026-72666-4)
+  and [supplied preprint version (2025)](https://doi.org/10.21203/rs.3.rs-6081478/v1).
+- [Authors' code](https://github.com/DeepLearningForPrecisionHealthLab/scMEDAL_for_scRNAseq)
+  and [preprocessed data/outputs](https://doi.org/10.6084/m9.figshare.28414367).
+- AML source: GEO GSE116256. Upstream code/data retain their original license terms.
+
+| Location | Contents |
+|---|---|
+| `reproducibility/` | Canonical run records, public-result verification, archive import, plotting and private-output wrappers |
+| `results/metrics/` | Six-method aggregates and FE/RE fold measurements |
+| `results/umap/` | Curated plots, aggregate cell counts and coordinate-file provenance |
+| `results/counterfactual/` | Complete fold-1 gene tests, target means and five-fold sensitivity summaries |
+| `results/provenance/` | Source ZIP hash, file inventory, sanitized historical manifest and recalculation report |
+| `docs/` | Interpretation, reproduction workflow, experiment history and evidence boundaries |

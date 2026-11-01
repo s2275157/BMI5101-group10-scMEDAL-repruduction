@@ -28,6 +28,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--variant", choices=tuple(VARIANTS), required=True)
     parser.add_argument("--seed", type=int, default=5)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--eval-test", action="store_true",
+                        help="Evaluate test only after selecting a configuration from validation.")
     return parser.parse_args()
 
 
@@ -37,7 +39,9 @@ def main() -> None:
     output_root = args.output_base.expanduser().resolve() / args.phase / args.variant
     recon_weight, adv_weight = VARIANTS[args.variant]
     folds = [1] if args.phase == "pilot" else [1, 2, 3, 4, 5]
-    evaluate_test = args.phase == "formal"
+    if args.eval_test and args.phase != "formal":
+        raise ValueError("--eval-test is only allowed for a formal run after validation selection")
+    evaluate_test = args.eval_test
 
     if not (author_repo / "models" / "models.py").is_file():
         raise FileNotFoundError(f"Not the authors' repository: {author_repo}")

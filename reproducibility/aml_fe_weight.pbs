@@ -20,6 +20,7 @@ echo "Phase: $FE_PHASE; variant: $FE_VARIANT"
 module load miniforge3/25.3.1
 module load cuda/11.8.0
 module load cudnn/11-8.9.4.25
+source "$(conda info --base)/etc/profile.d/conda.sh"
 conda activate scmedal-aml
 
 export MPLBACKEND=Agg
@@ -32,11 +33,18 @@ export OPENBLAS_NUM_THREADS=16
 
 python -c 'import tensorflow as tf; g=tf.config.list_physical_devices("GPU"); print("GPUs:", g); assert g, "TensorFlow cannot see a GPU"'
 
+FE_TEST_ARGS=()
+case "${FE_EVAL_TEST:-0}" in
+  0) ;;
+  1) FE_TEST_ARGS+=(--eval-test) ;;
+  *) echo "FE_EVAL_TEST must be 0 or 1" >&2; exit 2 ;;
+esac
+
 python reproducibility/fe_weight_train.py \
   --author-repo "$AUTHOR_REPO_ROOT" \
   --output-base "$FE_OUTPUT_BASE" \
   --phase "$FE_PHASE" \
   --variant "$FE_VARIANT" \
-  --seed 5
+  --seed 5 "${FE_TEST_ARGS[@]}"
 
 echo "Finished: $(date)"

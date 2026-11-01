@@ -27,10 +27,11 @@ python reproducibility/plot_fivefold_asw.py \
   --folds 5
 ```
 
-The ASW plot reports five-fold test means and 95% Student-t confidence
-intervals. Lower batch ASW denotes stronger suppression for batch-invariant
-methods; high batch ASW is expected for scMEDAL-RE because it explicitly models
-donor/batch-specific variation.
+The ASW plot reports means on the five supplied test subsets and nominal 95%
+Student-t intervals across overlapping folds. Harmony/Scanorama integration
+includes test expression. More negative raw batch ASW does not by itself imply
+better integration. High batch ASW is expected for the source-modeling RE
+representation. See [protocol limitations](../docs/AUDIT_PROTOCOL.md).
 
 Before producing counterfactual expression figures, run
 `reproducibility/audit_counterfactual_outputs.py`. Commit only its small CSV/JSON
@@ -42,4 +43,14 @@ They contain a five-fold gene-effect table, a selected-gene donor table, a
 leave-one-control-donor-out table, two figures, and a JSON summary. The fold-1
 directory contains one diagnostic 19-target heatmap and its top-gene table.
 Each figure summarizes model-generated as-if reconstructions from fixed
-Mono/Mono-like source-cell states.
+Mono/Mono-like source expression. Each target label enters the complete RE
+encoder and decoder; the latent vector is recomputed for each target.
+
+## Reconciled public evidence
+
+The complete fold-1 target-mean and all-gene test tables are now included. Run
+`python reproducibility/verify_archived_results.py` from a configured analysis
+environment to recalculate them and the FE/RE per-fold, direction-stability and
+donor-sensitivity summaries. Source ZIP hashes are in `provenance/`.
+Curated plots from the canonical seven coordinate tables are in `umap/`.
+Per-cell coordinate/annotation tables and the ZIP itself remain local.

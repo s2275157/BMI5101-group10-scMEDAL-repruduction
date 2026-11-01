@@ -48,3 +48,26 @@ Keep the original FE configuration as the primary benchmark. The `adv2` five-fol
 The workflow remains available in [`fe_weight_train.py`](../reproducibility/fe_weight_train.py), [`aml_fe_weight.pbs`](../reproducibility/aml_fe_weight.pbs), and [`fe_weight_compare.py`](../reproducibility/fe_weight_compare.py). The recorded `adv05` run used reconstruction weight 1000, adversarial weight 0.5, seed 5, fold 1, and validation-only evaluation.
 
 The repository's PBS template takes the project and private paths at submission time; it does not contain a personal NSCC account or scratch path. Example commands are in the main README.
+
+## Audit clarification (1 November 2026)
+
+The reported numbers above are documented summaries. Their original pilot and
+formal validation CSVs and completion logs are not in this public repository;
+this review checked consistency between the README, this document and the PPT,
+and did not independently rerun or authenticate those training jobs.
+
+The earlier `fe_weight_train.py` automatically evaluated test data when
+`--phase formal` was selected. That behavior does not establish that test scores
+were used for selection, but the code alone cannot certify that they were never
+computed. The revised wrapper defaults to validation evaluation in both phases.
+Test evaluation now requires explicit `--eval-test` in a formal run, or
+`FE_EVAL_TEST=1` through PBS, after configuration selection is complete.
+
+The original and new training seeds have not been matched retrospectively. The
+five-fold means describe near-equal reported validation scores, not a paired
+controlled significance test of the weight change.
+
+The newly supplied `scMEDAL_FE_RE_analysis.zip` resolves the fold-1 gene-test
+and FE/RE fold-metric evidence gaps, but it does not contain this experiment's
+tuning score files or completion logs. Its primary results therefore do not
+independently validate the sensitivity values above.

@@ -2,8 +2,8 @@
 """Plot five-fold AML ASW summaries from the canonical metric table.
 
 The input is produced by ``collect_metrics.py``.  The figure keeps the two
-scMEDAL objectives explicit: low batch ASW is desirable for batch-invariant
-methods, whereas high batch ASW is expected for scMEDAL-RE because it models
+scMEDAL objectives explicit: weak batch-label separation is desirable for batch-invariant
+methods. Raw negative ASW is not a monotonic quality measure. High batch ASW is expected for scMEDAL-RE because it models
 donor/batch-specific variation.
 """
 
@@ -85,6 +85,15 @@ def load_asw(metrics_path: Path, folds: int) -> pd.DataFrame:
         for label in ["batch", "celltype"]
     }
     observed = set(zip(asw["method"], asw["label"]))
+    if asw.duplicated(["method", "label"]).any():
+        raise RuntimeError("Duplicate method/label ASW rows")
+    numeric = asw[["mean", "std", "sem"]].to_numpy(dtype=float)
+    if not np.isfinite(numeric).all():
+        raise RuntimeError("Nonfinite ASW summary value")
+    if (asw[["std", "sem"]] < 0).any().any():
+        raise RuntimeError("ASW standard deviations and SEMs must be nonnegative")
+    if not np.allclose(asw["sem"], asw["std"] / np.sqrt(folds)):
+        raise RuntimeError("SEM does not match SD / sqrt(folds)")
     if observed != expected:
         missing_pairs = sorted(expected.difference(observed))
         extra_pairs = sorted(observed.difference(expected))
@@ -178,7 +187,7 @@ def main() -> None:
         asw,
         label="batch",
         title="Batch ASW",
-        direction_note="Lower = stronger suppression; high RE = intended batch modeling",
+        direction_note="Raw batch-label clustering; high RE is intended",
     )
     plot_panel(
         axes[1],
@@ -187,17 +196,17 @@ def main() -> None:
         title="Cell-type ASW",
         direction_note="Higher = stronger separability; † label-informed",
     )
-    fig.suptitle("AML five-fold test-set ASW", fontsize=14, fontweight="bold", y=0.98)
+    fig.suptitle("AML five-fold test-subset ASW", fontsize=14, fontweight="bold", y=0.98)
     fig.text(
         0.5,
-        0.015,
-        "Points are five-fold means; whiskers are 95% t confidence intervals. "
-        "scMEDAL-RE is not a batch-correction representation.",
+        0.025,
+        "Points: five test-subset means. Whiskers: nominal 95% t intervals across overlapping folds.\n"
+        "Harmony/Scanorama integrate test expression. RE models source variation.",
         ha="center",
         fontsize=9,
         color="#555555",
     )
-    fig.tight_layout(rect=(0, 0.05, 1, 0.94), w_pad=3.0)
+    fig.tight_layout(rect=(0, 0.08, 1, 0.94), w_pad=3.0)
 
     png_path = args.output_dir / "aml_asw_fivefold_95ci.png"
     pdf_path = args.output_dir / "aml_asw_fivefold_95ci.pdf"

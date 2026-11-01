@@ -1,0 +1,21 @@
+{
+  "status": "PASS",
+  "scope": "Public archived summaries recalculated; no model training or private array revalidation",
+  "six_method_aggregate_rows": 36,
+  "fe_re_per_fold_measurements": 60,
+  "fold1_genes_retested": 2916,
+  "fold1_target_group_counts": {
+    "AML": 12,
+    "control": 5,
+    "cellline": 2
+  },
+  "fold1_source_cells": 999,
+  "fold1_bh_fdr_min": 0.11423870247399659,
+  "fold1_bh_fdr_below_0_05": 0,
+  "fivefold_common_direction_genes": 216,
+  "samsn1_full_mean_delta": -0.0713217287746487,
+  "samsn1_without_bm5_mean_delta": -0.0564944827236409,
+  "other_four_methods_per_fold_measurements_supplied": false,
+  "tuning_score_csvs_supplied": false,
+  "source_archive_sha256": "e4994533be602735abd6c7bc52c87e40d4022fd4f89cea107e54f626aec619c5"
+}

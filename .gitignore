@@ -10,7 +10,7 @@ __pycache__/
 
 # Environments and secrets
 .env
-.venv/
+.venv*/
 env/
 *.key
 *.pem
@@ -40,3 +40,6 @@ results/raw/
 /docs/PRESENTATION_RESULTS.md
 /environment/presentation-plotting.txt
 /reproducibility/plot_presentation_results.py
+
+# Local evidence bundles and organized per-cell coordinate tables
+*.zip

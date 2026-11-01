@@ -1,0 +1,137 @@
+{
+  "coordinate_family": "AML_six_methods_train_split1",
+  "dataset": "train",
+  "fold": 1,
+  "cell_alignment_verified_across_all_methods": true,
+  "source_coordinates": [
+    {
+      "method": "Input PCA",
+      "archive_path": "scMEDAL_FE_RE_analysis/AML_six_methods_train_split1/umap_19batches_seed_5/umap_csv/X_umap_input_pca_train_1_19batchsample.csv",
+      "source_sha256": "6f006f5a8fc9d92ecd0fca481909de4a4c3c7cef90505f20615f63d96fae1096",
+      "rows": 23049,
+      "sources": 19,
+      "celltypes": 21
+    },
+    {
+      "method": "scMEDAL-FE",
+      "archive_path": "scMEDAL_FE_RE_analysis/AML_six_methods_train_split1/umap_19batches_seed_5/umap_csv/X_umap_scMEDAL-FE_latent_train_1_19batchsample.csv",
+      "source_sha256": "27dc86931e964eb3a1480ce67ac1b8d13e3a6c40e927c0c78f444d785db8b596",
+      "rows": 23049,
+      "sources": 19,
+      "celltypes": 21
+    },
+    {
+      "method": "scMEDAL-RE",
+      "archive_path": "scMEDAL_FE_RE_analysis/AML_six_methods_train_split1/umap_19batches_seed_5/umap_csv/X_umap_scMEDAL-RE_latent_train_1_19batchsample.csv",
+      "source_sha256": "c6c4f1139241b7259df1e62c358dd14a526264004994b20f472618970d63406b",
+      "rows": 23049,
+      "sources": 19,
+      "celltypes": 21
+    },
+    {
+      "method": "Harmony",
+      "archive_path": "scMEDAL_FE_RE_analysis/AML_six_methods_train_split1/umap_19batches_seed_5/umap_csv/X_umap_Harmony_latent_train_1_19batchsample.csv",
+      "source_sha256": "6904db2de03e4c37709911cb28abc51445d935d54822690339cbfff20d64ca97",
+      "rows": 23049,
+      "sources": 19,
+      "celltypes": 21
+    },
+    {
+      "method": "Scanorama",
+      "archive_path": "scMEDAL_FE_RE_analysis/AML_six_methods_train_split1/umap_19batches_seed_5/umap_csv/X_umap_Scanorama_latent_train_1_19batchsample.csv",
+      "source_sha256": "1b9cf9fde6d4e976493fac02f9106912c3070a43aa9a42024187feeb40e17f4d",
+      "rows": 23049,
+      "sources": 19,
+      "celltypes": 21
+    },
+    {
+      "method": "scVI",
+      "archive_path": "scMEDAL_FE_RE_analysis/AML_six_methods_train_split1/umap_19batches_seed_5/umap_csv/X_umap_scVI_latent_train_1_19batchsample.csv",
+      "source_sha256": "4264892424bc1d95f469a0b88fb612f09d6b8169790728a61399779bead512da",
+      "rows": 23049,
+      "sources": 19,
+      "celltypes": 21
+    },
+    {
+      "method": "scANVI",
+      "archive_path": "scMEDAL_FE_RE_analysis/AML_six_methods_train_split1/umap_19batches_seed_5/umap_csv/X_umap_scANVI_latent_train_1_19batchsample.csv",
+      "source_sha256": "cb73491264e7f039ff74bf0d61d950956cd095699607621857818fea54c729d8",
+      "rows": 23049,
+      "sources": 19,
+      "celltypes": 21
+    }
+  ],
+  "figures": [
+    {
+      "filename": "fe_re_batch_fold1_train.png",
+      "sha256": "8ab830887a4af5d90826740c36d3ffbf644b78fa1f8713c09377b99ccbedffc2",
+      "color_label": "batch",
+      "methods": [
+        "scMEDAL-FE",
+        "scMEDAL-RE"
+      ]
+    },
+    {
+      "filename": "all_methods_batch_fold1_train.png",
+      "sha256": "59b15f27d535fdaa7e3b1526c8b9b4a34fc1c78ef7d0d45f199bec16c6e626ec",
+      "color_label": "batch",
+      "methods": [
+        "Input PCA",
+        "scMEDAL-FE",
+        "scMEDAL-RE",
+        "Harmony",
+        "Scanorama",
+        "scVI",
+        "scANVI"
+      ]
+    },
+    {
+      "filename": "fe_re_celltype_fold1_train.png",
+      "sha256": "5ffdb279c73c124977dfebd267b708bf3ccfa6a53c591436a7fb7e32b3b32db2",
+      "color_label": "celltype",
+      "methods": [
+        "scMEDAL-FE",
+        "scMEDAL-RE"
+      ]
+    },
+    {
+      "filename": "all_methods_celltype_fold1_train.png",
+      "sha256": "6ee95832e501a3008a1c7c579066ed7046c8921e5ec63c6a7ba85ab22a6aaa8c",
+      "color_label": "celltype",
+      "methods": [
+        "Input PCA",
+        "scMEDAL-FE",
+        "scMEDAL-RE",
+        "Harmony",
+        "Scanorama",
+        "scVI",
+        "scANVI"
+      ]
+    },
+    {
+      "filename": "fe_re_patient_group_fold1_train.png",
+      "sha256": "c1c8d7ea51194cc33e311af545eff35c5b3d49da11cb6dff160ea87718ff7782",
+      "color_label": "Patient_group",
+      "methods": [
+        "scMEDAL-FE",
+        "scMEDAL-RE"
+      ]
+    },
+    {
+      "filename": "all_methods_patient_group_fold1_train.png",
+      "sha256": "c8bdc4f1b78a314a2bf1ffaa837dcc7f9ba051f3ca0423211d00e6debbc25dff",
+      "color_label": "Patient_group",
+      "methods": [
+        "Input PCA",
+        "scMEDAL-FE",
+        "scMEDAL-RE",
+        "Harmony",
+        "Scanorama",
+        "scVI",
+        "scANVI"
+      ]
+    }
+  ],
+  "per_cell_coordinates_and_annotations_published": false,
+  "scope": "Replot stored coordinates without fitting UMAP or rerunning models"
+}

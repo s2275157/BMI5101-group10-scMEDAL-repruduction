@@ -1,0 +1,12 @@
+{
+  "created_at": "2026-09-23T22:40:42.001676",
+  "python": "3.8.20",
+  "analysis_name": "AML_FE_RE_only_2026-09-23",
+  "model_folders": {
+    "scmedalfe": "run_crossval_loss_gen_weight-1_loss_recon_weight-1000_loss_class_weight-1_n_latent_dims-50_layer_units-512-132_scaling-min_max_model_type-scmedalfe_batch_size-512_epochs-500_patience-30_sample_size-10000_2026-09-22_14-43",
+    "scmedalre": "run_crossval_loss_recon_weight-110_loss_latent_cluster_weight-0.1_n_latent_dims-50_layer_units-512-132_scaling-min_max_batch_size-512_epochs-500_patience-30_sample_size-10000_2026-09-22_19-16"
+  },
+  "metrics_scope": "test partition, five-fold summary",
+  "umap_scope": "train partition, fold 1",
+  "private_output_paths_removed": true
+}

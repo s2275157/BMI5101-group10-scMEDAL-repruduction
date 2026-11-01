@@ -89,3 +89,28 @@ This submission is limited to the authors' preprocessed AML dataset. Training
 on a second dataset, changing the FE/RE architecture, donor-held-out
 validation, and FE+RE downstream prediction were not part of the completed
 experiments. No tuned-model test result is claimed.
+
+## Source and reporting audit (1 November 2026)
+
+This audit checked the public repository snapshot
+`3cad8227decdf0ab9365730a1822cc55032e5c84`, the supplied 20-slide PPT including
+notes, the March 2025 preprint, and the current upstream source at
+`bbf9a0b801123d63218cf05d93ec8f103453881d`. It did not rerun model training or
+reopen private NSCC arrays/logs. Historical completion statements above remain
+the experiment record rather than newly revalidated scheduler evidence.
+
+The review clarified transductive Harmony/Scanorama integration, scaled input
+and internal validation for scVI/scANVI, source-conditioned re-encoding in the
+RE reconstruction generator, and the descriptive scope of fold intervals.
+See [AUDIT_PROTOCOL.md](AUDIT_PROTOCOL.md).
+
+## Supplied result archive reconciliation (1 November 2026)
+
+The supplied ZIP was reconciled against the public result tables. Six-method
+aggregate metrics and five-fold gene tables match. FE/RE test means and SDs
+were recalculated from the ten archived fold rows (60 metric measurements).
+The complete fold-1 target means reproduce all 2,916 U statistics, p-values,
+and BH-FDR values; zero genes pass FDR 0.05. The 216 common-direction genes and
+all 25 selected-gene/control-omission rows were independently recalculated from
+the archived summary tables. No model was retrained or private array reopened.
+Canonical UMAP coordinates come from `AML_six_methods_train_split1`.

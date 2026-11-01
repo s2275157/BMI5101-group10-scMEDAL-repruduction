@@ -11,19 +11,8 @@ The three questions are:
 2. How do the six representations compare under the implemented protocol?
 3. How do predicted gene patterns change across target-source conditions?
 
-The result bundle was reconciled on **1 November 2026** against the supplied
-`scMEDAL_FE_RE_analysis.zip`. Its SHA-256 and file provenance are recorded in
-[`results/provenance/source_archive.json`](results/provenance/source_archive.json).
-This repository contains small derived results and analysis code. Source data,
-per-cell annotation tables, model arrays and presentation files stay local.
 
 ## Start here
-
-- [Results reconciliation and evidence](docs/RESULTS_RECONCILIATION.md)
-- [Protocol limitations](docs/AUDIT_PROTOCOL.md)
-- [Reproduce the checks or repeat the recorded workflow](docs/REPRODUCING.md)
-- [Presentation guide and short defense answers](docs/PRESENTATION_GUIDE.md)
-
 To recalculate the public results, use a separate Python 3.12 environment:
 
 ```bash
@@ -62,8 +51,6 @@ changes from cell type to source/batch. Here, the 19 batch labels identify the
 12 AML donors, five controls and two cell lines. FE and RE have independently
 fitted maps, so their axes and absolute positions are not directly comparable.
 Both figures use the stored coordinates from `AML_six_methods_train_split1`.
-Historical coordinate versions are explained in the
-[results reconciliation](docs/RESULTS_RECONCILIATION.md#umap-versions-and-presentation).
 
 [Patient-group coloring](results/umap/fe_re_patient_group_fold1_train.png) and
 [all-method cell-type view](results/umap/all_methods_celltype_fold1_train.png).

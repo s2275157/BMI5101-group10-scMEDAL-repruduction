@@ -7,9 +7,15 @@ examines model-generated source-condition reconstructions.
 
 The three questions are:
 
-1. Do FE and RE retain different source-related structure?
-2. How do the six representations compare under the implemented protocol?
-3. How do predicted gene patterns change across target-source conditions?
+1. How do the separately trained scMEDAL-FE and scMEDAL-RE models represent
+   cells in the AML dataset differently? In particular, what cell-type and
+   source-related structure (donor or cell line) does each representation retain?
+2. Across the five AML test folds, how do the six 50-dimensional representations
+   (scMEDAL-FE, scMEDAL-RE, Harmony, Scanorama, scVI and scANVI) compare in
+   cell-type separation and donor/batch separation?
+3. When scMEDAL-RE reconstructs the same held-out Mono/Mono-like cells under
+   different target donor or cell-line labels, how do its model-generated gene
+   expression patterns differ between AML-patient and healthy-donor targets?
 
 
 ## Start here

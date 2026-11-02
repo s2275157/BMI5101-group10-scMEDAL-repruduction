@@ -73,23 +73,11 @@ Values are mean +/- SD on the five supplied test subsets.
 FE has a higher mean cell-type ASW than Harmony, Scanorama and scVI in these
 runs, with modest absolute separation. RE has strong source-label structure,
 consistent with its modeling objective. scANVI uses cell-type supervision.
+### Note: 
+Here we use ASW as the major criteria because ASW has a range between -1 and 1, which is more comparable between different datasets. It would be more easy to interpret as negative ASW would indicate a more incorrect classification and more close to 1 indicates a more accurate classification, so the ASW index alone is more suggestive than other two indicator: CH and 1/DB. However, here we only use AML dataset, and I have reproduced other models using the same dataset, so that I can use CH and 1/DB here to compare between different models on the same dataset.
 
-Interpretation depends on the protocol:
-
-- Harmony and Scanorama concatenate train, validation and test cells for
-  integration. Their scored test embeddings are transductive.
-- The recorded scVI/scANVI runs use log-transformed, min-max-scaled `X` with a
-  ZINB likelihood. Standard count-based use ordinarily requires raw counts.
-  A corrected-input benchmark would require new training.
-- scVI/scANVI reserve 10% of the supplied training partition internally for
-  validation. Their early-stopping procedure differs from FE/RE.
-- Raw batch ASW measures label clustering. A more negative value alone does
-  not establish better integration. Cell-type preservation and composition matter.
-- Folds reuse sources. Nominal t intervals across overlapping folds describe
-  fold variation and do not establish independent new-donor uncertainty or
-  significant superiority between methods.
-
-Source tables: [36 aggregate metric rows](results/metrics/test_metrics_long.csv),
+#### Supplemental materials: 
+[36 aggregate metric rows](results/metrics/test_metrics_long.csv),
 [six-method mean table](results/metrics/test_metrics_mean.csv), and
 [60 FE/RE per-fold measurements](results/metrics/fe_re_test_per_fold.csv).
 All six aggregate summaries match the supplied archive. FE/RE means and SDs
@@ -129,7 +117,7 @@ Fold 1 uses 999 selected source cells; the five fold counts are 999, 998, 997,
 999 and 996. This analysis supplies hypotheses, rather than validated biomarkers
 or causal estimates.
 
-## Additional FE weight-sensitivity records
+## Implementation: Additional FE weight-sensitivity records
 
 Separate experiment notes report a single-fold pilot and five-fold validation
 of adversarial weight 2. Its documented combined score (cell-type ASW minus
@@ -138,6 +126,17 @@ The original weights (reconstruction 1000, adversarial 1) remain the benchmark.
 **The supplied result ZIP does not contain the tuning score CSVs or logs.**
 These remain documented summaries, with unaudited historical seed comparability.
 See [the retained sensitivity record](docs/FE_WEIGHT_SENSITIVITY.md).
+
+### Note:
+I chose to test scMEDAL-FE’s loss weights rather than implement another model architecture. My reasoning was as follows.
+
+In the AML dataset, batch labels identify donors or cell lines, and donor identity is related to disease status. A healthy donor cannot contribute malignant AML cells, while an AML patient can contribute both malignant and normal cells. Donor-associated variation may therefore contain meaningful biological differences as well as technical effects. Reducing batch separation could weaken real differences between cells of the same type from healthy donors and AML patients, although a low batch ASW alone cannot tell us whether this has happened.
+
+scMEDAL-RE is designed to retain batch-associated information. Its donor-separated UMAP and high batch ASW are consistent with that objective, but they do not establish that the retained differences are biologically meaningful. scMEDAL-FE instead reconstructs expression while training its encoder to make batch prediction difficult. I wondered whether changing the balance between these two objectives might improve cell-type separation.
+
+The authors also added cell-type supervision in FEC, but its reported AML cell-type ASW increased only modestly, from about 0.05 to 0.08. In my reproduction, scVI did not outperform FE on cell-type ASW, whereas label-informed scANVI performed substantially better. These comparisons involve different architectures and training procedures, so I cannot attribute the differences to using a VAE or assume they will hold across datasets.
+
+I therefore tested changes to FE’s reconstruction and adversarial loss weights, without changing its architecture. The tested settings showed no clear improvement in the documented validation results, so I retained the authors’ original weights as the benchmark.
 
 ## Scope and reproducibility
 

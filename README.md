@@ -31,6 +31,12 @@ RE uses source-conditioned probabilistic effects and a positive batch-classifier
 objective to retain source-associated structure. Neither representation is
 guaranteed to isolate pure biology or pure technical noise.
 
+![scMEDAL-FE and scMEDAL-RE architecture](results/figures/scmedal_fe_re_architecture.png)
+
+The diagram summarizes the separately trained subnetworks: FE uses an
+adversarial batch classifier, while RE models source-conditioned effects
+through Bayesian layers.
+
 The configured AML dataset contains 38,417 cells, 2,916 selected genes and 19
 source labels: 12 AML donors, five controls and two cell lines. The supplied
 fold-1 training coordinate tables independently confirm 23,049 cells, all 19
@@ -110,6 +116,13 @@ associations, with disease, individual and technical contributions confounded.
 - `SAMSN1` changes from **-0.0713** to **-0.0565** after omitting control BM5.
   Its direction persists across all five leave-one-control-out checks, while
   magnitude depends on the sources included.
+
+![Selected AML-minus-control target-donor gene effects across five folds](results/figures/aml_re_selected_gene_effects_fivefold.png)
+
+Each tile shows the AML-target minus control-target mean for a selected gene in
+one held-out cell fold. The number in parentheses is the count of folds with
+the same effect direction. The target donors recur across folds, so this plot
+shows descriptive stability across cell splits, not independent donor replication.
 
 [Complete fold-1 tests and target means](results/counterfactual/fold1_test_mono_monolike/)
 and [five-fold stability and donor sensitivity](results/counterfactual/fivefold_mono_monolike/).

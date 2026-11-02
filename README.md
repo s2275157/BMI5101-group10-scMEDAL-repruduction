@@ -74,7 +74,7 @@ FE has a higher mean cell-type ASW than Harmony, Scanorama and scVI in these
 runs, with modest absolute separation. RE has strong source-label structure,
 consistent with its modeling objective. scANVI uses cell-type supervision.
 ### Note: 
-Here we use ASW as the major criteria because ASW has a range between -1 and 1, which is more comparable between different datasets. It would be more easy to interpret as negative ASW would indicate a more incorrect classification and more close to 1 indicates a more accurate classification, so the ASW index alone is more suggestive than other two indicator: CH and 1/DB. However, here we only use AML dataset, and I have reproduced other models using the same dataset, so that I can use CH and 1/DB here to compare between different models on the same dataset.
+We use ASW as the primary metric because it compares, for each cell, distances to cells with the same label and to the nearest alternative label group. Its bounded scale makes cell-type and batch separation easy to report, but scores should not be treated as direct performance rankings across datasets with different label structures. Within the same dataset, we compare ASW (Not include CH and 1/DB) across methods using matched cells and labels. We interpret cell-type and batch results together, since stronger batch mixing may also weaken biological structure. These geometric metrics describe separation; none alone establishes biological validity.
 
 #### Supplemental materials: 
 [36 aggregate metric rows](results/metrics/test_metrics_long.csv),
